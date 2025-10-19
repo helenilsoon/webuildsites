@@ -1,6 +1,4 @@
-import Link from 'next/link';
-import { ArrowRightIcon, CodeBracketIcon, CursorArrowRippleIcon, DevicePhoneMobileIcon, RocketLaunchIcon, ServerIcon, CheckCircleIcon, StarIcon } from '@heroicons/react/24/outline';
-import { Header, HeroSection, Services, About, CtaSection, Portifolio, StatsSection, Testimonials, ContactForm, FinalCTA, Footer } from './components';
+import { Header, HeroSection, Services, About, CtaSection, Portifolio, StatsSection, Testimonials, ContactForm, FinalCTA, Footer, WhatsAppButton } from './components';
 
 export default function Home() {
   return (
@@ -35,6 +33,9 @@ export default function Home() {
         <FinalCTA />
       </main>
       <Footer />
+      
+      {/* WhatsApp Floating Button */}
+      <WhatsAppButton />
     </>
   );
 }

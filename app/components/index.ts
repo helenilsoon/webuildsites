@@ -18,3 +18,6 @@ export { default as StatsSection } from './StatsSection';
 
 // Form Components
 export { default as ContactForm } from './ContactForm';
+
+// Floating Components
+export { default as WhatsAppButton } from './WhatsAppButton';

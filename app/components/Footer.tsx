@@ -70,16 +70,11 @@ export default function Footer() {
                   contato@webuildsites.com.br
                 </a>
               </li>
-              <li className="flex items-start gap-3">
-                <PhoneIcon className="w-5 h-5 text-[#61ce70] flex-shrink-0 mt-0.5" />
-                <a href="tel:+5511999999999" className="text-sm hover:text-[#61ce70] transition-colors">
-                  (11) 99999-9999
-                </a>
-              </li>
+          
               <li className="flex items-start gap-3">
                 <MapPinIcon className="w-5 h-5 text-[#61ce70] flex-shrink-0 mt-0.5" />
                 <span className="text-sm">
-                  São Paulo, SP - Brasil
+                  Manaus, AM - Brasil
                 </span>
               </li>
             </ul>
