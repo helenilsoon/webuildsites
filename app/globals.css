@@ -1,0 +1,116 @@
+@import "tailwindcss";
+
+/* Estilos customizados */
+body {
+  color: #ffffff;
+  background-color: #1d2b48;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.btn-primary {
+  display: inline-block;
+  background: linear-gradient(180deg, #36c2ac 0%, #0061aa 100%);
+  color: #ffffff;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 4px 0 rgba(12, 12, 12, 0.11);
+  transition: all 0.3s;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.875rem;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+  box-shadow: 0 0px px 0 rgba(54, 194, 172, 0.35);
+}
+
+.btn-outline {
+  display: inline-block;
+  border: 2px solid #36c2ac;
+  background-color: transparent;
+  color: #36c2ac;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  transition: all 0.3s;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.875rem;
+  text-decoration: none;
+  font-weight: 400;
+}
+
+.btn-outline:hover {
+  background: linear-gradient(180deg, #36c2ac 0%, #0061aa 100%);
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 1px 2px 0 rgba(54, 194, 172, 0.25);
+}
+
+.section-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+.card {
+  background-color: #0061aa;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 6px -1px rgba(0, 0, 0, 0.3);
+  padding: 2rem;
+  transition: all 0.3s;
+  color: #ffffff;
+}
+
+.card:hover {
+   background: linear-gradient(200deg, #36c2ac 10%, #0061aa 100%);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+  transform: translateY(-4px);
+}
+@media (min-width: 768px) {
+  .section-title {
+    font-size: 2.25rem;
+  }
+}
+
+.section-subtitle {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1.125rem;
+  text-align: center;
+  max-width: 42rem;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 3rem;
+}
+
+.card {
+  background-color: #0061aa;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 6px -1px rgba(0, 0, 0, 0.3);
+  padding: 2rem;
+  transition: all 0.3s;
+  color: #ffffff;
+}
+
+.card:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+  transform: translateY(-4px);
+}
+
+/* Input focus styles */
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: #36c2ac;
+  box-shadow: 0 0 0 3px rgba(54, 194, 172, 0.2);
+}

@@ -1,0 +1,33 @@
+import type { Metadata } from 'next';
+import { Poppins } from 'next/font/google';
+import './globals.css';
+
+const poppins = Poppins({
+  weight: ['400'],
+  //  weight: ['400', '600', '700'],
+  subsets: ['latin'],
+  variable: '--font-poppins',
+  display: 'swap',
+});
+
+export const metadata: Metadata = {
+  title: 'WebuildSites - Criação de Sites Profissionais',
+  description: 'Soluções digitais inovadoras para o seu negócio. Desenvolvimento de sites profissionais, e-commerces e sistemas web.',
+  icons: {
+    icon: '/favicon.ico',
+  },
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <html lang="pt-BR">
+      <body className={`${poppins.className} bg-white text-white-400`}>
+        {children}
+      </body>
+    </html>
+  );
+}
