@@ -1,12 +1,22 @@
 import { CodeBracketIcon, CursorArrowRippleIcon, DevicePhoneMobileIcon, RocketLaunchIcon, ServerIcon } from "@heroicons/react/24/outline";
 
 export default function Portifolio() {
+
+  const mapIcon = {
+    "Next.js": "la-node",
+    "React": "react",
+    "Node.js": "node",
+    "MongoDB": "database",
+    "WordPress": "wordpress",
+    "PostgreSQL": "database",
+  }
     const portfolio = [
   {
     icon: CodeBracketIcon,
     title: 'E-commerce Fashion',
     description: 'Plataforma completa de vendas online com integração de pagamento e gestão de estoque.',
-    tags: ['Next.js', 'Stripe', 'Tailwind']
+    tags: [ 'Next.js', 'Stripe', 'Tailwind'],
+    
   },
   {
     icon: DevicePhoneMobileIcon,

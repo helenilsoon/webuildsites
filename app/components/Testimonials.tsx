@@ -50,7 +50,7 @@ export default function Testimonials() {
                     <StarIcon key={i} className="w-5 h-5 text-yellow-400 fill-yellow-400" />
                   ))}
                 </div>
-                <p className="text-white/90 mb-6 italic">"{testimonial.text}"</p>
+                <p className="text-white/90 mb-6 italic">&ldquo;{testimonial.text}&rdquo;</p>
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-[#61ce70]/20 rounded-full flex items-center justify-center text-[#61ce70] font-bold text-lg">
                     {testimonial.name.charAt(0)}
