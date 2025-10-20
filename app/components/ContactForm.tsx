@@ -1,14 +1,28 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, useEffect } from 'react';
+import Label from './form/Label';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 export default function ContactForm(){
+    const [csrfToken, setCsrfToken] = useState('');
+    const [recaptchaToken, setRecaptchaToken] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    
+    useEffect(() => {
+      // Generate CSRF token on component mount
+      const token = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+      setCsrfToken(token);
+    }, []);
+
     const [formData, setFormData] = useState({
-      name: 'helenilson',
-      email: 'helenilsoon@gmail.com',
-      phone: '92981186413',
+      name: '',
+      email: '',
+      phone: '',
       service: 'Site Institucional',
-      message: 'Olá quero um ecommerce!'
+      message: '',
+      // Honeypot field - should be empty when submitted by humans
+      _honey: ''
     });
     
     const [status, setStatus] = useState<{
@@ -21,15 +35,37 @@ export default function ContactForm(){
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
+      
+      // Basic client-side validation
+      if (formData._honey) {
+        // If honeypot field is filled, it's likely a bot
+        console.log('Bot detected');
+        return;
+      }
+
+      if (!recaptchaToken) {
+        setStatus({ type: 'error', message: 'Por favor, complete a verificação do reCAPTCHA.' });
+        return;
+      }
+
       setStatus({ type: 'loading', message: 'Enviando...' });
+      setIsSubmitting(true);
 
       try {
+        const payload = {
+          ...formData,
+          _csrf: csrfToken,
+          recaptchaToken
+        };
+
         const response = await fetch('/api/contact', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
           },
-          body: JSON.stringify(formData),
+          body: JSON.stringify(payload),
+          credentials: 'same-origin'
         });
 
         const data = await response.json();
@@ -41,13 +77,17 @@ export default function ContactForm(){
             email: '',
             phone: '',
             service: 'Site Institucional',
-            message: ''
+            message: '',
+            _honey: ''
           });
+          setRecaptchaToken('');
         } else {
           setStatus({ type: 'error', message: data.error || 'Erro ao enviar mensagem.' });
         }
       } catch (error) {
         setStatus({ type: 'error', message: 'Erro ao enviar mensagem. Por favor, tente novamente.' });
+      } finally {
+        setIsSubmitting(false);
       }
 
       // Limpar mensagem após 5 segundos
@@ -82,12 +122,28 @@ export default function ContactForm(){
               </div>
             )}
             
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6" autoComplete="off">
+              {/* CSRF Token */}
+              <input type="hidden" name="_csrf" value={csrfToken} />
+              
+              {/* Honeypot field - hidden from users but visible to bots */}
+              <div className="hidden">
+                <label htmlFor="_honey">Não preencha este campo</label>
+                <input
+                  type="text"
+                  id="_honey"
+                  name="_honey"
+                  value={formData._honey}
+                  onChange={handleChange}
+                  tabIndex={-1}
+                  autoComplete="off"
+                />
+              </div>
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-semibold text-white mb-2">
+                  <Label htmlFor="name">
                     Nome Completo
-                  </label>
+                  </Label>
                   <input
                     type="text"
                     id="name"
@@ -99,9 +155,9 @@ export default function ContactForm(){
                   />
                 </div>
                 <div>
-                  <label htmlFor="email" className="block text-sm font-semibold text-white mb-2">
+                  <Label htmlFor="email">
                     E-mail
-                  </label>
+                  </Label>
                   <input
                     type="email"
                     id="email"
@@ -116,7 +172,7 @@ export default function ContactForm(){
               
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="phone" className="block text-sm font-semibold text-white mb-2">
+                  <label htmlFor="phone">
                     Telefone
                   </label>
                   <input
@@ -129,9 +185,9 @@ export default function ContactForm(){
                   />
                 </div>
                 <div>
-                  <label htmlFor="service" className="block text-sm font-semibold text-white mb-2">
+                  <Label htmlFor="service">
                     Serviço de Interesse
-                  </label>
+                  </Label>
                   <select
                     id="service"
                     value={formData.service}
@@ -148,9 +204,9 @@ export default function ContactForm(){
               </div>
               
               <div>
-                <label htmlFor="message" className="block text-sm font-semibold text-white mb-2">
+                <Label htmlFor="message">
                   Mensagem
-                </label>
+                </Label>
                 <textarea
                   id="message"
                   rows={5}
@@ -162,13 +218,21 @@ export default function ContactForm(){
                 />
               </div>
               
-              <button 
-                type="submit" 
-                disabled={status.type === 'loading'}
-                className="btn-primary w-full md:w-auto px-12 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {status.type === 'loading' ? 'Enviando...' : 'Enviar Mensagem'}
-              </button>
+              <div className="mt-4">
+                <ReCAPTCHA
+                  sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || 'YOUR_RECAPTCHA_SITE_KEY'}
+                  onChange={(token: string | null) => setRecaptchaToken(token || '')}
+                  className="flex justify-center mb-4"
+                />
+                
+                <button
+                  type="submit"
+                  className="w-full bg-[#61ce70] hover:bg-[#4da85a] text-white font-bold py-3 px-6 rounded-lg transition duration-300 focus:outline-none focus:ring-2 focus:ring-[#4da85a] focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={status.type === 'loading' || isSubmitting || !recaptchaToken}
+                >
+                  {status.type === 'loading' ? 'Enviando...' : 'Enviar Mensagem'}
+                </button>
+              </div>
             </form>
           </div>
         </div>
