@@ -1,4 +1,4 @@
-import { ArrowRightIcon, CodeBracketIcon, CursorArrowRippleIcon, DevicePhoneMobileIcon, RocketLaunchIcon, ServerIcon, CheckCircleIcon, StarIcon } from '@heroicons/react/24/outline';
+import { CodeBracketIcon, CursorArrowRippleIcon, DevicePhoneMobileIcon, RocketLaunchIcon, ServerIcon } from '@heroicons/react/24/outline';
 
 export default function Services() {
 
