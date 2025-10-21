@@ -1,13 +1,20 @@
 'use client';
 
-import { useState, FormEvent, useEffect } from 'react';
+import { useState, FormEvent, useEffect, useRef } from 'react';
 import Label from './form/Label';
 import ReCAPTCHA from 'react-google-recaptcha';
+
+declare global {
+  interface Window {
+    grecaptcha: ReCAPTCHA;
+  }
+}
 
 export default function ContactForm(){
     const [csrfToken, setCsrfToken] = useState('');
     const [recaptchaToken, setRecaptchaToken] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const recaptchaRef = useRef<ReCAPTCHA>(null);
     
     useEffect(() => {
       // Generate CSRF token on component mount
@@ -33,29 +40,79 @@ export default function ContactForm(){
       message: ''
     });
 
+    const isFormValid = () => {
+      return formData.name && formData.email && formData.message && !formData._honey;
+    };
+
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       
       // Basic client-side validation
       if (formData._honey) {
-        // If honeypot field is filled, it's likely a bot
-        console.log('Bot detected');
+        console.log('Bot detected - honeypot triggered');
         return;
       }
 
-      if (!recaptchaToken) {
-        setStatus({ type: 'error', message: 'Por favor, complete a verificação do reCAPTCHA.' });
+      if (!isFormValid()) {
+        setStatus({ type: 'error', message: 'Por favor, preencha todos os campos obrigatórios.' });
         return;
       }
 
-      setStatus({ type: 'loading', message: 'Enviando...' });
-      setIsSubmitting(true);
+      try {
+        setIsSubmitting(true);
+        setStatus({ type: 'loading', message: 'Verificando...' });
 
+        // Verifica se o reCAPTCHA já foi carregado
+        if (!window.grecaptcha) {
+          throw new Error('O verificador de segurança não foi carregado corretamente. Por favor, recarregue a página.');
+        }
+
+        // Executa o reCAPTCHA
+        try {
+          const token = await recaptchaRef.current?.executeAsync();
+          
+          if (!token) {
+            throw new Error('Falha ao verificar o reCAPTCHA. Tente novamente.');
+          }
+          
+          // Continua com o envio do formulário
+          await submitForm(token);
+        } catch (error) {
+          // Em caso de erro no reCAPTCHA, tenta forçar um reset
+          if (recaptchaRef.current) {
+            recaptchaRef.current.reset();
+          }
+          throw error;
+        }
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Erro ao processar o formulário. Por favor, tente novamente.';
+        setStatus({ 
+          type: 'error', 
+          message: errorMessage 
+        });
+        
+        // Reseta o reCAPTCHA em caso de erro
+        if (recaptchaRef.current) {
+          recaptchaRef.current.reset();
+        }
+        setRecaptchaToken('');
+      } finally {
+        setIsSubmitting(false);
+      }
+
+      // Limpar mensagem após 5 segundos
+      setTimeout(() => {
+        setStatus({ type: 'idle', message: '' });
+      }, 5000);
+    };
+
+    // Função para enviar o formulário após a verificação do reCAPTCHA
+    const submitForm = async (token: string) => {
       try {
         const payload = {
           ...formData,
           _csrf: csrfToken,
-          recaptchaToken
+          recaptchaToken: token
         };
 
         const response = await fetch('/api/contact', {
@@ -70,30 +127,41 @@ export default function ContactForm(){
 
         const data = await response.json();
 
-        if (response.ok) {
-          setStatus({ type: 'success', message: 'Mensagem enviada com sucesso! Entraremos em contato em breve.' });
-          setFormData({
-            name: '',
-            email: '',
-            phone: '',
-            service: 'Site Institucional',
-            message: '',
-            _honey: ''
-          });
-          setRecaptchaToken('');
-        } else {
-          setStatus({ type: 'error', message: data.error || 'Erro ao enviar mensagem.' });
+        if (!response.ok) {
+          throw new Error(data.error || 'Erro ao enviar mensagem.');
         }
-      } catch (error) {
-        setStatus({ type: 'error', message: 'Erro ao enviar mensagem. Por favor, tente novamente.' });
-      } finally {
-        setIsSubmitting(false);
-      }
 
-      // Limpar mensagem após 5 segundos
-      setTimeout(() => {
-        setStatus({ type: 'idle', message: '' });
-      }, 5000);
+        // Se chegou aqui, o envio foi bem-sucedido
+        setStatus({ type: 'success', message: 'Mensagem enviada com sucesso! Entraremos em contato em breve.' });
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          service: 'Site Institucional',
+          message: '',
+          _honey: ''
+        });
+        setRecaptchaToken('');
+        
+        // Reseta o reCAPTCHA após envio bem-sucedido
+        recaptchaRef.current?.reset();
+        
+        // Limpar mensagem após 5 segundos
+        setTimeout(() => {
+          setStatus(prev => prev.type === 'success' ? { type: 'idle', message: '' } : prev);
+        }, 5000);
+        
+      } catch (error) {
+        // Log do erro para depuração
+        console.error('Erro ao enviar formulário:', error);
+        
+        // Reseta o reCAPTCHA em caso de erro
+        recaptchaRef.current?.reset();
+        setRecaptchaToken('');
+        
+        // Propaga o erro para ser tratado no catch externo
+        throw error;
+      }
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -220,15 +288,20 @@ export default function ContactForm(){
               
               <div className="mt-4">
                 <ReCAPTCHA
-                  sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || 'YOUR_RECAPTCHA_SITE_KEY'}
-                  onChange={(token: string | null) => setRecaptchaToken(token || '')}
-                  className="flex justify-center mb-4"
+                  ref={recaptchaRef}
+                  sitekey="6LflVvErAAAAABF2t2a3wrv5FJRLvIKoqx-Yyxb9"
+                  size="invisible"
+                  badge="bottomright"
+                  onExpired={() => setRecaptchaToken('')}
+                  onError={() => {
+                    setStatus({ type: 'error', message: 'Erro ao carregar o verificador de segurança.' });
+                  }}
                 />
                 
                 <button
                   type="submit"
                   className="w-full bg-[#61ce70] hover:bg-[#4da85a] text-white font-bold py-3 px-6 rounded-lg transition duration-300 focus:outline-none focus:ring-2 focus:ring-[#4da85a] focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                  disabled={status.type === 'loading' || isSubmitting || !recaptchaToken}
+                  disabled={status.type === 'loading' || isSubmitting || !formData.name || !formData.email || !formData.message}
                 >
                   {status.type === 'loading' ? 'Enviando...' : 'Enviar Mensagem'}
                 </button>

@@ -122,10 +122,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Verify reCAPTCHA
+    // Verify reCAPTCHA v3
     if (!recaptchaToken) {
       return NextResponse.json(
-        { error: 'Falha na verificação do reCAPTCHA.' },
+        { error: 'Falha na verificação do reCAPTCHA. Atualize a página e tente novamente.' },
         { status: 400 }
       );
     }
@@ -133,16 +133,40 @@ export async function POST(request: NextRequest) {
     // Verify reCAPTCHA with Google
     const recaptchaSecret = process.env.RECAPTCHA_SECRET_KEY;
     const recaptchaResponse = await fetch(
-      `https://www.google.com/recaptcha/api/siteverify?secret=${recaptchaSecret}&response=${recaptchaToken}`,
-      { method: 'POST' }
+      'https://www.google.com/recaptcha/api/siteverify',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `secret=${recaptchaSecret}&response=${recaptchaToken}`,
+      }
     );
     
     const recaptchaData = await recaptchaResponse.json();
     
-    if (!recaptchaData.success || recaptchaData.score < 0.5) {
-      console.log('reCAPTCHA verification failed:', recaptchaData);
+    // Log para depuração (remova em produção)
+    console.log('reCAPTCHA verification result:', {
+      success: recaptchaData.success,
+      score: recaptchaData.score,
+      hostname: recaptchaData.hostname,
+      action: recaptchaData.action,
+      'challenge_ts': recaptchaData['challenge_ts'],
+      'error-codes': recaptchaData['error-codes']
+    });
+    
+    if (!recaptchaData.success) {
       return NextResponse.json(
-        { error: 'Falha na verificação de segurança. Por favor, tente novamente.' },
+        { error: 'Falha na verificação de segurança. Código: ' + (recaptchaData['error-codes']?.[0] || 'unknown') },
+        { status: 400 }
+      );
+    }
+    
+    // Verifica a pontuação (0.0 a 1.0, onde 1.0 é muito provavelmente um humano)
+    const scoreThreshold = 0.5; // Ajuste este valor conforme necessário
+    if (recaptchaData.score < scoreThreshold) {
+      return NextResponse.json(
+        { error: 'Atividade suspeita detectada. Por favor, tente novamente.' },
         { status: 400 }
       );
     }
