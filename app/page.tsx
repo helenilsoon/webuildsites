@@ -21,7 +21,7 @@ export default function Home() {
         <Portifolio />
 
         {/* Stats Section */}
-        <StatsSection />
+        {/* <StatsSection /> */}
 
         {/* Testimonials Section */}
         <Testimonials />
@@ -30,7 +30,7 @@ export default function Home() {
         <ContactForm />
 
         {/* Final CTA Section */}
-        <FinalCTA />
+        {/* <FinalCTA /> */}
       </main>
       <Footer />
       

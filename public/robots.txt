@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://webuildsites.com.br/sitemap.xml
+
+# Block unnecessary files
+Disallow: /api/
+Disallow: /_next/
+Disallow: /favicon.ico
+Disallow: /*.json$

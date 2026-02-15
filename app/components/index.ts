@@ -4,6 +4,9 @@
 export { default as Header } from './Header';
 export { default as Footer } from './Footer';
 
+// SEO Components
+export { default as JsonLd } from './JsonLd';
+
 // Hero & CTA Sections
 export { default as HeroSection } from './HeroSection';
 export { default as CtaSection } from './CtaSection';
