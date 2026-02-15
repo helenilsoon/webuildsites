@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Poppins } from 'next/font/google';
 import './globals.css';
+import VisitTracker from './components/VisitTracker';
 
 const poppins = Poppins({
   weight: ['400'],
@@ -32,6 +33,7 @@ export default function RootLayout({
         />
       </head>
       <body className={`${poppins.className} bg-white text-white-400`}>
+        <VisitTracker />
         {children}
       </body>
     </html>
