@@ -1,0 +1,86 @@
+[33mcommit 7e4175e9d35189e669949cb5811d46ba27c863d8[m[33m ([m[1;36mHEAD -> [m[1;32mfeat/chatboot[m[33m, [m[1;31morigin/feat/chatboot[m[33m)[m
+Author: helenilson <helenilsoon@gmail.com>
+Date:   Wed Feb 18 04:23:13 2026 -0500
+
+    chore:corrigindo erro de estlint
+
+[33mcommit ef0983e8d480241dbd6065dde6ac3f4d575f7939[m
+Author: helenilson <helenilsoon@gmail.com>
+Date:   Wed Feb 18 04:12:18 2026 -0500
+
+    feat: adicionado chatboot
+
+[33mcommit 519b32b3d42a815f3f1cdb1a0d1aa705372be274[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m
+Author: helenilson <helenilsoon@gmail.com>
+Date:   Mon Feb 16 16:25:45 2026 -0500
+
+    chore: melhorando o SEO
+
+[33mcommit 593cd437e3b52fbdebdc0cc270227a8bb6910582[m
+Author: helenilson <helenilsoon@gmail.com>
+Date:   Sun Feb 15 06:25:05 2026 -0500
+
+    chore: configurando pequenas coisa , ico, sesion
+
+[33mcommit b43faef541f75723830c4e3d15487e9d0e8e2a6b[m
+Merge: d2cf46f bd2f619
+Author: helenilson <42508788+helenilsoon@users.noreply.github.com>
+Date:   Sun Feb 15 05:17:37 2026 -0500
+
+    Merge pull request #2 from helenilsoon/feat/contadorvisitas
+    
+    Feat/contadorvisitas
+
+[33mcommit bd2f619d85e6cc4566eb360c73503ba3e564768f[m[33m ([m[1;31morigin/feat/contadorvisitas[m[33m, [m[1;32mfeat/contadorvisitas[m[33m)[m
+Author: helenilson <helenilsoon@gmail.com>
+Date:   Sun Feb 15 04:48:52 2026 -0500
+
+    feat:adicionado contador de visitas
+
+[33mcommit 61f3d3db305149dc5ce0dac723ec5e9f24b46e87[m[33m ([m[1;32mchore[m[33m)[m
+Author: helenilson <helenilsoon@gmail.com>
+Date:   Fri Feb 13 01:33:19 2026 -0500
+
+    chore: atualizando dependecias
+
+[33mcommit d2cf46f94afa1508a15ebce564191b90075910c2[m
+Author: helenilson correa de oliveira <helenilsoon@gmail.com>
+Date:   Mon Oct 20 22:13:18 2025 -0400
+
+    fix: corrigido erro do Recaptcha
+
+[33mcommit a1be438fc6b2cff52b028b2c4160cbe7b7267c44[m
+Author: helenilson correa de oliveira <helenilsoon@gmail.com>
+Date:   Mon Oct 20 02:13:32 2025 -0400
+
+    feature:CSRF Protection,Integrated Google reCAPTCHA v3 for bot detection, Honeypot Field, Input Sanitization,Form Validation,Rate Limiting:
+
+[33mcommit 1701d244e231543f672702e02c8ab655c755a411[m
+Author: helenilson correa de oliveira <helenilsoon@gmail.com>
+Date:   Sun Oct 19 23:49:02 2025 -0400
+
+    feature: Formulario Contanto configurado :)
+
+[33mcommit de5579d951153b5897436fb6c35376f6980303b6[m
+Author: helenilson correa de oliveira <helenilsoon@gmail.com>
+Date:   Sun Oct 19 04:03:44 2025 -0400
+
+    fix: corrigido o bud da aspas
+
+[33mcommit 25d4b7073e19c05d594ac91b64b1521742ec685b[m
+Author: helenilson correa de oliveira <helenilsoon@gmail.com>
+Date:   Sun Oct 19 03:13:30 2025 -0400
+
+    feat:float button whatspp
+
+[33mcommit 4240e9ce226a7f586e75c1b02e1962341f7d9031[m
+Author: helenilson correa de oliveira <helenilsoon@gmail.com>
+Date:   Sun Oct 19 02:29:37 2025 -0400
+
+    feat: inicializar projeto com estrutura base
+
+[33mcommit 0058f8b973aca4e59cecaa20539805df70ca51af[m
+Author: helenilson correa de oliveira <helenilsoon@gmail.com>
+Date:   Sat Oct 18 23:29:49 2025 -0400
+
+    Initial commit from Create Next App

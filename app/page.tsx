@@ -1,6 +1,5 @@
 import { Header, HeroSection, Services, About, CtaSection, Portifolio, 
-  StatsSection, Testimonials, ContactForm, FinalCTA, Footer, WhatsAppButton,
-   Chat} from './components';
+  Testimonials, ContactForm, Footer, Chat} from './components';
 
 export default function Home() {
   return (

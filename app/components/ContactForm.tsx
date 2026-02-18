@@ -12,7 +12,6 @@ declare global {
 
 export default function ContactForm(){
     const [csrfToken, setCsrfToken] = useState('');
-    const [recaptchaToken, setRecaptchaToken] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const recaptchaRef = useRef<ReCAPTCHA>(null);
     

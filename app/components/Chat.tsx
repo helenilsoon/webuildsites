@@ -100,7 +100,7 @@ export default function FloatingChat() {
         ...prev,
         { role: "assistant", text: data.reply },
       ]);
-    } catch (error) {
+    } catch {
       setMessages((prev) => [
         ...prev,
         {
@@ -151,7 +151,7 @@ export default function FloatingChat() {
           text: `Prazer ${userData.name}! 👋 Como posso ajudar você hoje com seu projeto?`,
         },
       ]);
-    } catch (error) {
+    } catch {
       setError("Erro de conexão. Tente novamente.");
     }
   };
