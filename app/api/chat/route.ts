@@ -1,8 +1,8 @@
 import OpenAI from "openai";
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import { sendProposalEmail } from "@/lib/mailer";
 import { rateLimit } from "@/lib/rateLimit";
-import { validateRequest, chatRequestSchema } from "@/lib/validation";
+import { validateRequest, chatRequestSchema, ChatMessage } from "@/lib/validation";
 
 
 const client = new OpenAI({
@@ -12,7 +12,7 @@ const client = new OpenAI({
 
 export async function POST(req: Request) {
   // 🔒 Rate limiting check
-  const rateLimitResult = rateLimit(req as any);
+  const rateLimitResult = rateLimit(req as NextRequest);
   if (!rateLimitResult.success) {
     return NextResponse.json(
       { 
@@ -105,7 +105,7 @@ Nome: ${userData.name}
 Email: ${userData.email}
 
 Conversa:
-${messages.map((m: any) => `${m.role}: ${m.text}`).join("\n")}
+${messages.map((m: ChatMessage) => `${m.role}: ${m.text}`).join("\n")}
 
 A proposta deve conter:
 
@@ -220,8 +220,8 @@ SE O CLIENTE ENVIAR QUALQUER COISA FORA DO CONTEXTO:
 
 
 },
-        ...messages.map((m: any) => {
-          const role = m.role === "bot" ? "assistant" : m.role === "user" ? "user" : "system";
+        ...messages.map((m: ChatMessage) => {
+          const role = m.role === "assistant" ? "assistant" : m.role === "user" ? "user" : "system";
           return {
             role: role as "user" | "assistant" | "system",
             content: m.text,
