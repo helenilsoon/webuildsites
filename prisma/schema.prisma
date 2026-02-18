@@ -1,9 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client"
   output   = "../app/generated/prisma"
@@ -11,7 +8,6 @@ generator client {
 
 datasource db {
   provider = "postgresql"
- 
 }
 
 model Visit {
@@ -35,16 +31,17 @@ model Lead {
   whatsapp      String?        @db.Text
   project       String?        @db.Text
   createdAt     DateTime       @default(now())
-  conversations Conversation[]  // 👈 adicionar isso
+  conversations Conversation[]
 }
 
 model Conversation {
-  id        String    @id @default(cuid())
+  id        String     @id @default(cuid())
   leadId    String
-  lead      Lead      @relation(fields: [leadId], references: [id])
+  lead      Lead       @relation(fields: [leadId], references: [id])
   messages  Message[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  proposals Proposal[] // 👈 adicionado
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 }
 
 model Message {
@@ -53,5 +50,16 @@ model Message {
   conversation   Conversation @relation(fields: [conversationId], references: [id])
   role           String       // "user" ou "assistant"
   text           String       @db.Text
+  createdAt      DateTime     @default(now())
+}
+
+model Proposal {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  clientName     String
+  clientEmail    String
+  content        String       @db.Text
+  sentAt         DateTime
   createdAt      DateTime     @default(now())
 }
