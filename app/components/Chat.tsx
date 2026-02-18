@@ -15,6 +15,7 @@ export default function FloatingChat() {
   const [isOpen, setIsOpen] = useState(false);
   const [isIdentified, setIsIdentified] = useState(false);
   const [isSendingProposal, setIsSendingProposal] = useState(false);
+  const [conversationId, setConversationId] = useState<string | null>(null);
 
 
 
@@ -78,7 +79,7 @@ export default function FloatingChat() {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: updatedMessages, userData }),
+        body: JSON.stringify({ messages: updatedMessages, userData,conversationId }),
       });
 
       if (!res.ok) {
@@ -141,7 +142,8 @@ export default function FloatingChat() {
         setError(errorData.error || 'Erro ao cadastrar');
         return;
       }
-
+      const responseData = await res.json();
+      setConversationId(responseData.conversationId); // 👈 salva o id
       setIsIdentified(true);
       setError(""); // Limpa erro em caso de sucesso
 
@@ -182,6 +184,7 @@ export default function FloatingChat() {
         ]);
         setError("");
         setMessage("");
+        setConversationId(null);
       }}
       className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-sm"
     >

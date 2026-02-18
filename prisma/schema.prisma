@@ -29,11 +29,29 @@ model Visit {
 }
 
 model Lead {
-  id        String   @id @default(uuid())
-  name      String?
-  email     String?
-  whatsapp  String?  @db.Text
-  project   String?  @db.Text
-  createdAt DateTime @default(now())
+  id            String         @id @default(uuid())
+  name          String?
+  email         String?
+  whatsapp      String?        @db.Text
+  project       String?        @db.Text
+  createdAt     DateTime       @default(now())
+  conversations Conversation[]  // 👈 adicionar isso
 }
 
+model Conversation {
+  id        String    @id @default(cuid())
+  leadId    String
+  lead      Lead      @relation(fields: [leadId], references: [id])
+  messages  Message[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  role           String       // "user" ou "assistant"
+  text           String       @db.Text
+  createdAt      DateTime     @default(now())
+}
