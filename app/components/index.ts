@@ -18,6 +18,8 @@ export { default as StatsSection } from './StatsSection';
 
 // Form Components
 export { default as ContactForm } from './ContactForm';
+export { default as Chat}  from './Chat';
 
 // Floating Components
 export { default as WhatsAppButton } from './WhatsAppButton';
+export { default as TypingIndicator } from './TypingIndicator';

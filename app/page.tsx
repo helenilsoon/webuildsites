@@ -1,4 +1,6 @@
-import { Header, HeroSection, Services, About, CtaSection, Portifolio, StatsSection, Testimonials, ContactForm, FinalCTA, Footer, WhatsAppButton } from './components';
+import { Header, HeroSection, Services, About, CtaSection, Portifolio, 
+  StatsSection, Testimonials, ContactForm, FinalCTA, Footer, WhatsAppButton,
+   Chat} from './components';
 
 export default function Home() {
   return (
@@ -30,12 +32,14 @@ export default function Home() {
         <ContactForm />
 
         {/* Final CTA Section */}
+
+       <Chat />
         {/* <FinalCTA /> */}
       </main>
       <Footer />
       
       {/* WhatsApp Floating Button */}
-      <WhatsAppButton />
+      {/* <WhatsAppButton /> */}
     </>
   );
 }
