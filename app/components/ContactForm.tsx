@@ -1,314 +1,243 @@
-'use client';
+"use client";
 
-import { useState, FormEvent, useEffect, useRef } from 'react';
-import Label from './form/Label';
-import ReCAPTCHA from 'react-google-recaptcha';
+const steps = [
+  {
+    num: "1",
+    title: "Clique no botão do chat",
+    desc: "O chatbot abre no canto da tela, pronto para te atender.",
+  },
+  {
+    num: "2",
+    title: "Descreva seu projeto",
+    desc: "Conte o que você precisa: site, e-commerce, landing page ou redesign.",
+  },
+  {
+    num: "3",
+    title: "Receba seu orçamento",
+    desc: "Nossa equipe analisa e retorna com uma proposta personalizada rapidinho.",
+  },
+];
 
-declare global {
-  interface Window {
-    grecaptcha: ReCAPTCHA;
+const features = ["Resposta imediata", "Sem formulário", "Orçamento rápido", "100% gratuito"];
+
+export default function ContatoSection() {
+  // 🔥 Dispara evento que o FloatingChat escuta para abrir
+  function openChat() {
+    window.dispatchEvent(new Event("open-floating-chat"));
   }
-}
 
-export default function ContactForm(){
-    const [csrfToken, setCsrfToken] = useState('');
-    const [isSubmitting, setIsSubmitting] = useState(false);
-  const [recaptchaToken, setRecaptchaToken] = useState('');
-    const recaptchaRef = useRef<ReCAPTCHA>(null);
-    
-    useEffect(() => {
-      // Generate CSRF token on component mount
-      const token = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-      setCsrfToken(token);
-    }, []);
+  return (
+    <section id="contato" style={{ backgroundColor: "#1d2b48", padding: "5rem 1.5rem" }}>
+      <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
 
-    const [formData, setFormData] = useState({
-      name: '',
-      email: '',
-      phone: '',
-      service: 'Site Institucional',
-      message: '',
-      // Honeypot field - should be empty when submitted by humans
-      _honey: ''
-    });
-    
-    const [status, setStatus] = useState<{
-      type: 'idle' | 'loading' | 'success' | 'error';
-      message: string;
-    }>({
-      type: 'idle',
-      message: ''
-    });
+        {/* ── Título ── */}
+        <h2 className="section-title">
+          Entre em <span style={{ color: "#36c2ac" }}>Contato</span>
+        </h2>
+        <p className="section-subtitle">
+          Fale agora com nosso assistente virtual e tire suas dúvidas em tempo real.
+        </p>
 
-    const isFormValid = () => {
-      return formData.name && formData.email && formData.message && !formData._honey;
-    };
+        {/* ── Grid ── */}
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+          gap: "2.5rem",
+          alignItems: "center",
+        }}>
 
-    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      
-      // Basic client-side validation
-      if (formData._honey) {
-        console.log('Bot detected - honeypot triggered');
-        return;
-      }
-
-      if (!isFormValid()) {
-        setStatus({ type: 'error', message: 'Por favor, preencha todos os campos obrigatórios.' });
-        return;
-      }
-
-      try {
-        setIsSubmitting(true);
-        setStatus({ type: 'loading', message: 'Verificando...' });
-
-        // Verifica se o reCAPTCHA já foi carregado
-        if (!window.grecaptcha) {
-          throw new Error('O verificador de segurança não foi carregado corretamente. Por favor, recarregue a página.');
-        }
-
-        // Executa o reCAPTCHA
-        try {
-          const token = await recaptchaRef.current?.executeAsync();
-          
-          if (!token) {
-            throw new Error('Falha ao verificar o reCAPTCHA. Tente novamente.');
-          }
-          
-          // Continua com o envio do formulário
-          await submitForm(token);
-        } catch (error) {
-          // Em caso de erro no reCAPTCHA, tenta forçar um reset
-          if (recaptchaRef.current) {
-            recaptchaRef.current.reset();
-          }
-          throw error;
-        }
-      } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : 'Erro ao processar o formulário. Por favor, tente novamente.';
-        setStatus({ 
-          type: 'error', 
-          message: errorMessage 
-        });
-        
-        // Reseta o reCAPTCHA em caso de erro
-        if (recaptchaRef.current) {
-          recaptchaRef.current.reset();
-        }
-        setRecaptchaToken('');
-      } finally {
-        setIsSubmitting(false);
-      }
-
-      // Limpar mensagem após 5 segundos
-      setTimeout(() => {
-        setStatus({ type: 'idle', message: '' });
-      }, 5000);
-    };
-
-    // Função para enviar o formulário após a verificação do reCAPTCHA
-    const submitForm = async (token: string) => {
-      try {
-        const payload = {
-          ...formData,
-          _csrf: csrfToken,
-          recaptchaToken: token
-        };
-
-        const response = await fetch('/api/contact', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest'
-          },
-          body: JSON.stringify(payload),
-          credentials: 'same-origin'
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.error || 'Erro ao enviar mensagem.');
-        }
-
-        // Se chegou aqui, o envio foi bem-sucedido
-        setStatus({ type: 'success', message: 'Mensagem enviada com sucesso! Entraremos em contato em breve.' });
-        setFormData({
-          name: '',
-          email: '',
-          phone: '',
-          service: 'Site Institucional',
-          message: '',
-          _honey: ''
-        });
-        setRecaptchaToken('');
-        
-        // Reseta o reCAPTCHA após envio bem-sucedido
-        recaptchaRef.current?.reset();
-        
-        // Limpar mensagem após 5 segundos
-        setTimeout(() => {
-          setStatus(prev => prev.type === 'success' ? { type: 'idle', message: '' } : prev);
-        }, 5000);
-        
-      } catch (error) {
-        // Log do erro para depuração
-        console.error('Erro ao enviar formulário:', error);
-        
-        // Reseta o reCAPTCHA em caso de erro
-        recaptchaRef.current?.reset();
-        setRecaptchaToken('');
-        
-        // Propaga o erro para ser tratado no catch externo
-        throw error;
-      }
-    };
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-      setFormData({
-        ...formData,
-        [e.target.id]: e.target.value
-      });
-    };
-
-    return(
-        <section id="contato" className="py-20 bg-[#1d2b48]">
-        <div className="container mx-auto px-6 lg:px-8">
-          <div className="max-w-3xl mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="section-title">Entre em <span className="text-[#61ce70]">Contato</span></h2>
-              <p className="section-subtitle">Preencha o formulário abaixo e entraremos em contato em breve.</p>
+          {/* ── ESQUERDA: passos ── */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+            <div>
+              <h3 style={{ fontSize: "1.5rem", fontWeight: 700, color: "#fff", lineHeight: 1.35 }}>
+                Como funciona o{" "}
+                <span style={{ color: "#36c2ac" }}>nosso atendimento?</span>
+              </h3>
+              <p style={{ marginTop: "0.75rem", fontSize: "0.9rem", color: "rgba(255,255,255,0.7)", lineHeight: 1.7 }}>
+                Em vez de preencher um formulário, você conversa diretamente
+                com nosso assistente e já recebe as respostas que precisa — na hora!
+              </p>
             </div>
-            
-            {status.message && (
-              <div className={`mb-6 p-4 rounded-lg ${
-                status.type === 'success' ? 'bg-green-500/20 border border-green-500 text-green-100' :
-                status.type === 'error' ? 'bg-red-500/20 border border-red-500 text-red-100' :
-                'bg-blue-500/20 border border-blue-500 text-blue-100'
-              }`}>
-                {status.message}
-              </div>
-            )}
-            
-            <form onSubmit={handleSubmit} className="space-y-6" autoComplete="off">
-              {/* CSRF Token */}
-              <input type="hidden" name="_csrf" value={csrfToken} />
-              
-              {/* Honeypot field - hidden from users but visible to bots */}
-              <div className="hidden">
-                <label htmlFor="_honey">Não preencha este campo</label>
-                <input
-                  type="text"
-                  id="_honey"
-                  name="_honey"
-                  value={formData._honey}
-                  onChange={handleChange}
-                  tabIndex={-1}
-                  autoComplete="off"
-                />
-              </div>
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <Label htmlFor="name">
-                    Nome Completo
-                  </Label>
-                  <input
-                    type="text"
-                    id="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-4 py-3 border border-[#0061aa] bg-[#0061aa] text-white rounded-lg focus:ring-2 focus:ring-[#36c2ac] focus:border-transparent outline-none transition placeholder:text-white/50"
-                    placeholder="Seu nome"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="email">
-                    E-mail
-                  </Label>
-                  <input
-                    type="email"
-                    id="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-4 py-3 border border-[#0061aa] bg-[#0061aa] text-white rounded-lg focus:ring-2 focus:ring-[#36c2ac] focus:border-transparent outline-none transition placeholder:text-white/50"
-                    placeholder="seu@email.com"
-                  />
-                </div>
-              </div>
-              
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <label htmlFor="phone">
-                    Telefone
-                  </label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border border-[#0061aa] bg-[#0061aa] text-white rounded-lg focus:ring-2 focus:ring-[#36c2ac] focus:border-transparent outline-none transition placeholder:text-white/50"
-                    placeholder="(11) 99999-9999"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="service">
-                    Serviço de Interesse
-                  </Label>
-                  <select
-                    id="service"
-                    value={formData.service}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border border-[#0061aa] bg-[#0061aa] text-white rounded-lg focus:ring-2 focus:ring-[#36c2ac] focus:border-transparent outline-none transition placeholder:text-white/50"
-                  >
-                    <option>Site Institucional</option>
-                    <option>E-commerce</option>
-                    <option>Landing Page</option>
-                    <option>Redesign</option>
-                    <option>Outro</option>
-                  </select>
-                </div>
-              </div>
-              
-              <div>
-                <Label htmlFor="message">
-                  Mensagem
-                </Label>
-                <textarea
-                  id="message"
-                  rows={5}
-                  value={formData.message}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-3 border border-[#0061aa] bg-[#0061aa] text-white rounded-lg focus:ring-2 focus:ring-[#36c2ac] focus:border-transparent outline-none transition resize-none placeholder:text-white/50"
-                  placeholder="Conte-nos sobre seu projeto..."
-                />
-              </div>
-              
-              <div className="mt-4">
-                <ReCAPTCHA
-                  ref={recaptchaRef}
-                  sitekey="6LflVvErAAAAABF2t2a3wrv5FJRLvIKoqx-Yyxb9"
-                  size="invisible"
-                  badge="bottomright"
-                  onExpired={() => setRecaptchaToken('')}
-                  onError={() => {
-                    setStatus({ type: 'error', message: 'Erro ao carregar o verificador de segurança.' });
-                  }}
-                />
-                
-                <button
-                  type="submit"
-                  className="w-full bg-[#61ce70] hover:bg-[#4da85a] text-white font-bold py-3 px-6 rounded-lg transition duration-300 focus:outline-none focus:ring-2 focus:ring-[#4da85a] focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                  disabled={status.type === 'loading' || isSubmitting || !formData.name || !formData.email || !formData.message}
+
+            <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+              {steps.map((step) => (
+                <div
+                  key={step.num}
+                  className="card"
+                  style={{ display: "flex", alignItems: "flex-start", gap: "1rem", padding: "1rem 1.25rem" }}
                 >
-                  {status.type === 'loading' ? 'Enviando...' : 'Enviar Mensagem'}
-                </button>
+                  <div style={{
+                    width: "2.25rem", height: "2.25rem", minWidth: "2.25rem",
+                    borderRadius: "0.625rem",
+                    background: "linear-gradient(180deg, #36c2ac 0%, #0061aa 100%)",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    fontWeight: 800, fontSize: "0.875rem", color: "#fff",
+                  }}>
+                    {step.num}
+                  </div>
+                  <div>
+                    <p style={{ color: "#fff", fontWeight: 600, fontSize: "0.9rem", marginBottom: "0.2rem" }}>
+                      {step.title}
+                    </p>
+                    <p style={{ color: "rgba(255,255,255,0.65)", fontSize: "0.8rem", lineHeight: 1.6 }}>
+                      {step.desc}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* ── DIREITA: card ── */}
+          <div style={{ position: "relative" }}>
+            {/* glow */}
+            <div style={{
+              position: "absolute", inset: 0, display: "flex",
+              alignItems: "center", justifyContent: "center", pointerEvents: "none",
+            }}>
+              <div style={{
+                width: "18rem", height: "18rem", borderRadius: "9999px",
+                background: "#36c2ac", filter: "blur(80px)", opacity: 0.15,
+              }} />
+            </div>
+
+            <div style={{
+              position: "relative",
+              backgroundColor: "#0061aa",
+              borderRadius: "1.25rem",
+              border: "1px solid rgba(54,194,172,0.3)",
+              padding: "2.5rem 2rem",
+              textAlign: "center",
+              boxShadow: "0 4px 32px rgba(0,0,0,0.35)",
+            }}>
+
+              {/* Ícone com pulso */}
+              <div style={{ display: "flex", justifyContent: "center", marginBottom: "1.5rem" }}>
+                <div style={{ position: "relative" }}>
+                  <div style={{
+                    width: "5rem", height: "5rem", borderRadius: "9999px",
+                    background: "linear-gradient(180deg, #36c2ac 0%, #0061aa 100%)",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    animation: "chatPulse 2.5s infinite",
+                  }}>
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="white">
+                      <path d="M20 2H4C2.9 2 2 2.9 2 4v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z" />
+                    </svg>
+                  </div>
+                  <span style={{
+                    position: "absolute", bottom: "2px", right: "2px",
+                    width: "1rem", height: "1rem", borderRadius: "9999px",
+                    backgroundColor: "#36c2ac", border: "2px solid #0061aa",
+                    boxShadow: "0 0 8px #36c2ac",
+                    animation: "dotBlink 2s ease-in-out infinite",
+                  }} />
+                </div>
               </div>
-            </form>
+
+              {/* Badge */}
+              <div style={{
+                display: "inline-flex", alignItems: "center", gap: "0.4rem",
+                backgroundColor: "rgba(54,194,172,0.12)",
+                border: "1px solid rgba(54,194,172,0.35)",
+                borderRadius: "9999px", padding: "0.3rem 1rem",
+                fontSize: "0.7rem", fontWeight: 600, letterSpacing: "0.08em",
+                color: "#36c2ac", marginBottom: "1.25rem",
+              }}>
+                <span style={{
+                  width: "0.45rem", height: "0.45rem", borderRadius: "9999px",
+                  backgroundColor: "#36c2ac", boxShadow: "0 0 6px #36c2ac",
+                  animation: "dotBlink 2s ease-in-out infinite",
+                }} />
+                Assistente Online Agora
+              </div>
+
+              <h3 style={{ color: "#fff", fontWeight: 700, fontSize: "1.2rem", lineHeight: 1.35, marginBottom: "0.75rem" }}>
+                Prefere conversar ao invés<br />de preencher formulários?
+              </h3>
+
+              <p style={{ color: "rgba(255,255,255,0.7)", fontSize: "0.875rem", lineHeight: 1.7, marginBottom: "2rem" }}>
+                Nosso chatbot responde na hora sobre orçamentos, serviços e
+                prazos. É rápido, simples e sem burocracia!
+              </p>
+
+              {/* ── Botão que abre o FloatingChat ── */}
+              <button
+                onClick={openChat}
+                style={{
+                  width: "100%",
+                  display: "flex", alignItems: "center", justifyContent: "center", gap: "0.75rem",
+                  background: "linear-gradient(180deg, #36c2ac 0%, #0061aa 100%)",
+                  color: "#fff", fontWeight: 600, fontSize: "0.95rem",
+                  padding: "1rem 1.5rem", borderRadius: "0.75rem", border: "none",
+                  cursor: "pointer", letterSpacing: "0.05em", textTransform: "uppercase",
+                  boxShadow: "0 1px 4px rgba(12,12,12,0.2), 0 0 20px rgba(54,194,172,0.25)",
+                  transition: "all 0.3s", marginBottom: "1rem",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.opacity = "0.9";
+                  e.currentTarget.style.transform = "translateY(-2px)";
+                  e.currentTarget.style.boxShadow = "0 6px 24px rgba(54,194,172,0.4)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.opacity = "1";
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.boxShadow = "0 1px 4px rgba(12,12,12,0.2), 0 0 20px rgba(54,194,172,0.25)";
+                }}
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                  <path d="M20 2H4C2.9 2 2 2.9 2 4v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" />
+                </svg>
+                Iniciar Conversa Agora
+              </button>
+
+              <p style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.45)" }}>
+                Ou envie um e-mail para{" "}
+                <a
+                  href="mailto:contato@webuildsites.com.br"
+                  style={{ color: "#36c2ac", textDecoration: "none", fontWeight: 500 }}
+                >
+                  contato@webuildsites.com.br
+                </a>
+              </p>
+
+              {/* Chips */}
+              <div style={{
+                display: "flex", flexWrap: "wrap", gap: "0.5rem", justifyContent: "center",
+                marginTop: "1.75rem", paddingTop: "1.25rem",
+                borderTop: "1px solid rgba(255,255,255,0.1)",
+              }}>
+                {features.map((f) => (
+                  <span key={f} style={{
+                    display: "inline-flex", alignItems: "center", gap: "0.35rem",
+                    backgroundColor: "rgba(255,255,255,0.06)",
+                    border: "1px solid rgba(255,255,255,0.1)",
+                    borderRadius: "9999px", padding: "0.3rem 0.75rem",
+                    fontSize: "0.7rem", color: "rgba(255,255,255,0.65)",
+                  }}>
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none"
+                      stroke="#36c2ac" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                    {f}
+                  </span>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
-      </section>        
-    )
+      </div>
+
+      <style>{`
+        @keyframes chatPulse {
+          0%   { box-shadow: 0 0 0 0    rgba(54,194,172,0.55); }
+          70%  { box-shadow: 0 0 0 22px rgba(54,194,172,0);    }
+          100% { box-shadow: 0 0 0 0    rgba(54,194,172,0);    }
+        }
+        @keyframes dotBlink {
+          0%, 100% { opacity: 1;   transform: scale(1);    }
+          50%       { opacity: 0.4; transform: scale(0.85); }
+        }
+      `}</style>
+    </section>
+  );
 }
