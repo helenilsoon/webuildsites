@@ -161,7 +161,7 @@ export default function FloatingChat() {
       {/* Botão flutuante */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-5 right-5 w-14 h-14 rounded-full bg-violet-600 text-white text-2xl shadow-lg flex items-center justify-center z-[9999] hover:bg-violet-700 transition"
+        className="fixed bottom-5 right-5 w-14 h-14 rounded-full bg-[#61ce70] text-white text-2xl shadow-lg flex items-center justify-center z-[9999] hover:bg-[#4da85a] transition"
       >
         💬
       </button>
@@ -170,7 +170,7 @@ export default function FloatingChat() {
         <div className="fixed bottom-24 right-5 w-80 h-[480px] bg-white rounded-xl shadow-2xl flex flex-col z-[9999] border">
 
           {/* Header com botão sair somente se identificado */}
-<div className="bg-violet-600 text-white p-4 font-semibold rounded-t-xl flex justify-between items-center">
+<div className="bg-[#0061aa] text-white p-4 font-semibold rounded-t-xl flex justify-between items-center">
   <span>WebuildSites</span>
   {isIdentified && (
     <button
@@ -205,7 +205,7 @@ export default function FloatingChat() {
                   setUserData({ ...userData, name: e.target.value });
                   setError(""); // Limpa erro ao digitar
                 }}
-                className="border rounded-md px-3 py-2 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-violet-500"
+                className="border border-[#0061aa] rounded-md px-3 py-2 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#36c2ac]"
               />
 
               <input
@@ -216,7 +216,7 @@ export default function FloatingChat() {
                   setUserData({ ...userData, email: e.target.value });
                   setError(""); // Limpa erro ao digitar
                 }}
-                className="border rounded-md px-3 py-2 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-violet-500"
+                className="border border-[#0061aa] rounded-md px-3 py-2 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#36c2ac]"
               />
 
               {error && (
@@ -227,7 +227,7 @@ export default function FloatingChat() {
 
               <button
                 onClick={handleStartChat}
-                className="bg-violet-600 text-white py-2 rounded-md hover:bg-violet-700 transition"
+                className="bg-[#0061aa] text-white py-2 rounded-md hover:bg-[#61ce70] transition"
               >
                 Iniciar conversa 🚀
               </button>
@@ -253,7 +253,7 @@ export default function FloatingChat() {
                     )}
                     <div
                       className={`px-3 py-2 rounded-lg max-w-[80%] ${msg.role === "user"
-                        ? "bg-violet-600 text-white"
+                        ? "bg-[#61ce70] text-white"
                         : "bg-gray-200 text-gray-800"
                         }`}
                     >
@@ -281,13 +281,13 @@ export default function FloatingChat() {
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="Digite sua mensagem..."
-                  className="flex-1 min-w-0 border rounded-md px-3 py-2 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-violet-500"
+                  className="flex-1 min-w-0 border border-[#0061aa] rounded-md px-3 py-2 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#36c2ac]"
                   onKeyDown={(e) => e.key === "Enter" && sendMessage()}
                 />
                 <button
                   onClick={sendMessage}
                   disabled={loading}
-                  className="shrink-0 bg-violet-600 text-white px-4 py-2 rounded-md hover:bg-violet-700 transition disabled:opacity-50"
+                  className="shrink-0 bg-[#61ce70] text-white px-4 py-2 rounded-md hover:bg-[#4da85a] transition disabled:opacity-50"
                 >
                   ➤
                 </button>
