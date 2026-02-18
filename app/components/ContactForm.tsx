@@ -13,6 +13,7 @@ declare global {
 export default function ContactForm(){
     const [csrfToken, setCsrfToken] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
+  const [recaptchaToken, setRecaptchaToken] = useState('');
     const recaptchaRef = useRef<ReCAPTCHA>(null);
     
     useEffect(() => {
