@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "Lead" ADD COLUMN     "email" TEXT,
+ALTER COLUMN "name" DROP NOT NULL,
+ALTER COLUMN "whatsapp" DROP NOT NULL,
+ALTER COLUMN "project" DROP NOT NULL;

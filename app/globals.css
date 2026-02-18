@@ -76,6 +76,15 @@ html {
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
   transform: translateY(-4px);
 }
+@keyframes spin-slow {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 1.5s linear infinite;
+}
+
 @media (min-width: 768px) {
   .section-title {
     font-size: 2.25rem;
