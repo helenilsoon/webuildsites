@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
 import {marked} from "marked";
+import DOMPurify from "isomorphic-dompurify";
 
 
 const transporter = nodemailer.createTransport({
@@ -14,7 +15,8 @@ export async function sendProposalEmail(
   to: string,
   proposal: string
 ) {
-  const htmlContent = marked(proposal);
+  const rawHtml = marked(proposal);
+  const htmlContent = DOMPurify.sanitize(rawHtml as string);
 
   await transporter.sendMail({
     from: `"WebuildSites 🚀" <${process.env.EMAIL_USER}>`,

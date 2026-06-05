@@ -12,7 +12,7 @@ const client = new OpenAI({
 
 export async function POST(req: Request) {
 
-  const rateLimitResult = rateLimit(req as NextRequest);
+  const rateLimitResult = await rateLimit(req as NextRequest, "chat", 10, 60 * 1000);
   if (!rateLimitResult.success) {
     return NextResponse.json(
       {

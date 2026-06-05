@@ -1,9 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { UAParser } from "ua-parser-js";
-
+import { rateLimit } from "@/lib/rateLimit";
 
 export async function POST(request: NextRequest) {
+  
+  const rateLimitResult = await rateLimit(request, "visit", 30, 60 * 1000); // 30 visitas por minuto
+  if (!rateLimitResult.success) {
+    return NextResponse.json(
+      { error: "Muitas requisições de visitas." },
+      { status: 429 }
+    );
+  }
+
   try {
     const body = await request.json();
 

@@ -63,3 +63,11 @@ model Proposal {
   sentAt         DateTime
   createdAt      DateTime     @default(now())
 }
+
+model RateLimit {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  count     Int
+  resetTime DateTime
+  createdAt DateTime @default(now())
+}

@@ -1,9 +1,18 @@
 import { prisma } from "@/lib/prisma";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { validateRequest, leadRequestSchema } from "@/lib/validation";
+import { rateLimit } from "@/lib/rateLimit";
 
 export async function POST(request: NextRequest) {
   
+  const rateLimitResult = await rateLimit(request, "lead", 5, 60 * 1000); // 5 cadastros por minuto
+  if (!rateLimitResult.success) {
+    return NextResponse.json(
+      { success: false, error: "Muitas solicitações. Por favor, tente novamente mais tarde." },
+      { status: 429 }
+    );
+  }
+
   try {
     const data = await request.json();
 
