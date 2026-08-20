@@ -81,15 +81,14 @@ export default function Footer() {
               </li>
               <li className="flex items-start gap-3">
                 <PhoneIcon className="w-5 h-5 text-[#61ce70] flex-shrink-0 mt-0.5" />
-                {/* TODO: substituir pelo número real */}
                 <a
-                  href="https://wa.me/5592XXXXXXXXX"
+                  href="https://wa.me/5592991805753?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20um%20or%C3%A7amento."
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label="Falar pelo WhatsApp"
+                  aria-label="Falar pelo WhatsApp (92) 99180-5753"
                   className="text-sm hover:text-[#61ce70] transition-colors"
                 >
-                  WhatsApp: (92) 9XXXX-XXXX
+                  WhatsApp: (92) 99180-5753
                 </a>
               </li>
               <li className="flex items-start gap-3">
