@@ -25,11 +25,28 @@ export default function FloatingChat() {
   const [loading, setLoading] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
+  const [unreadCount, setUnreadCount] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const wasLoadingRef = useRef(false);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+    if (isOpen) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages, isOpen]);
+
+  // Detecta quando a IA terminou de escrever com o chat fechado → mostra toast
+  useEffect(() => {
+    if (wasLoadingRef.current && !loading && !isOpen) {
+      const lastMsg = messages[messages.length - 1];
+      if (lastMsg?.role === "assistant") {
+        setToastMessage("💬 Nova mensagem do Assistente!");
+        setShowToast(true);
+        setUnreadCount((c) => c + 1);
+      }
+    }
+    wasLoadingRef.current = loading;
+  }, [loading, isOpen, messages]);
 
   // Escuta evento do botão na seção de contato
   useEffect(() => {
@@ -65,6 +82,7 @@ export default function FloatingChat() {
     } else {
       setIsOpen(true);
       setShowToast(false);
+      setUnreadCount(0);
     }
   };
 
@@ -502,10 +520,24 @@ export default function FloatingChat() {
 
         .wbs-fab-badge {
           position: absolute; top: -2px; right: -2px;
-          width: 14px; height: 14px; border-radius: 50%;
+          min-width: 14px; height: 14px; border-radius: 50%;
           background: #36c2ac; border: 2px solid #1d2b48;
           box-shadow: 0 0 6px #36c2ac;
           animation: statusBlink 2s ease-in-out infinite;
+        }
+        .wbs-fab-unread {
+          position: absolute; top: -6px; right: -6px;
+          min-width: 20px; height: 20px; border-radius: 10px;
+          background: #ef4444; border: 2px solid #1d2b48;
+          box-shadow: 0 0 8px rgba(239,68,68,0.7);
+          animation: chatSlideIn 0.3s cubic-bezier(.22,1,.36,1) both;
+          display: flex; align-items: center; justify-content: center;
+          font-size: 10px; font-weight: 700; color: #fff; padding: 0 3px;
+        }
+
+        .wbs-toast-notification.new-msg {
+          border-color: rgba(54,194,172,0.7);
+          box-shadow: 0 12px 32px rgba(0,0,0,0.4), 0 0 24px rgba(54,194,172,0.4);
         }
 
         @media (max-width: 400px) {
@@ -513,9 +545,25 @@ export default function FloatingChat() {
         }
       `}</style>
 
-      {/* ── NOTIFICAÇÃO TOAST AO MINIMIZAR ── */}
+      {/* ── NOTIFICAÇÃO TOAST AO MINIMIZAR / NOVA MENSAGEM ── */}
       {showToast && !isOpen && (
-        <div className="wbs-toast-notification" onClick={() => { setIsOpen(true); setShowToast(false); }}>
+        <div
+          className={`wbs-toast-notification ${unreadCount > 0 ? "new-msg" : ""}`}
+          onClick={() => { setIsOpen(true); setShowToast(false); setUnreadCount(0); }}
+        >
+          {unreadCount > 0 && (
+            <span style={{
+              background: "linear-gradient(135deg, #36c2ac, #0061aa)",
+              borderRadius: "10px",
+              padding: "2px 7px",
+              fontSize: "10px",
+              fontWeight: 700,
+              color: "#fff",
+              flexShrink: 0,
+            }}>
+              +{unreadCount}
+            </span>
+          )}
           <span>{toastMessage}</span>
           <button
             type="button"
@@ -542,7 +590,11 @@ export default function FloatingChat() {
             <path d="M20 2H4C2.9 2 2 2.9 2 4v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
           </svg>
         )}
-        {!isOpen && <span className="wbs-fab-badge" />}
+        {!isOpen && unreadCount > 0 ? (
+          <span className="wbs-fab-unread">{unreadCount}</span>
+        ) : !isOpen ? (
+          <span className="wbs-fab-badge" />
+        ) : null}
       </button>
 
       {/* ── JANELA DO CHAT ── */}
