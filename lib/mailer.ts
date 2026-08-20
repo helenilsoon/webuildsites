@@ -1,7 +1,6 @@
 import nodemailer from "nodemailer";
-import {marked} from "marked";
-import DOMPurify from "isomorphic-dompurify";
-
+import { marked } from "marked";
+import sanitizeHtml from "sanitize-html";
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -15,8 +14,14 @@ export async function sendProposalEmail(
   to: string,
   proposal: string
 ) {
-  const rawHtml = marked(proposal);
-  const htmlContent = DOMPurify.sanitize(rawHtml as string);
+  const rawHtml = await marked(proposal);
+  const htmlContent = sanitizeHtml(rawHtml, {
+    allowedTags: sanitizeHtml.defaults.allowedTags.concat(['h1', 'h2', 'h3', 'hr', 'u', 'span']),
+    allowedAttributes: {
+      '*': ['style', 'class'],
+      a: ['href', 'target'],
+    },
+  });
 
   await transporter.sendMail({
     from: `"WebuildSites 🚀" <${process.env.EMAIL_USER}>`,
