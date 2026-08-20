@@ -23,6 +23,8 @@ export default function FloatingChat() {
   ]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -31,10 +33,52 @@ export default function FloatingChat() {
 
   // Escuta evento do botão na seção de contato
   useEffect(() => {
-    const handleOpenChat = () => setIsOpen(true);
+    const handleOpenChat = () => {
+      setIsOpen(true);
+      setShowToast(false);
+    };
     window.addEventListener("open-floating-chat", handleOpenChat);
     return () => window.removeEventListener("open-floating-chat", handleOpenChat);
   }, []);
+
+  // Notificação de desengajamento quando o usuário troca de aba do navegador
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden && isOpen) {
+        if (isIdentified || messages.length > 1) {
+          setToastMessage(
+            userData.name
+              ? `💬 ${userData.name}, continue seu orçamento!`
+              : "👋 Estamos online! Clique para continuar seu orçamento."
+          );
+          setShowToast(true);
+        }
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
+  }, [isOpen, isIdentified, messages.length, userData.name]);
+
+  const handleToggleChat = () => {
+    if (isOpen) {
+      handleMinimize();
+    } else {
+      setIsOpen(true);
+      setShowToast(false);
+    }
+  };
+
+  const handleMinimize = () => {
+    setIsOpen(false);
+    if (isIdentified || messages.length > 1) {
+      setToastMessage(
+        userData.name
+          ? `💬 ${userData.name}, continue seu orçamento!`
+          : "💬 Clique para continuar seu orçamento!"
+      );
+      setShowToast(true);
+    }
+  };
 
   const sendMessage = async () => {
     if (!message.trim() || loading) return;
@@ -163,11 +207,56 @@ export default function FloatingChat() {
           box-shadow: 0 24px 80px rgba(0,0,0,0.45), 0 0 0 1px rgba(54,194,172,0.2);
           animation: chatSlideIn 0.3s cubic-bezier(.22,1,.36,1) both;
           font-family: inherit;
+          transition: width 0.35s cubic-bezier(.22,1,.36,1), height 0.35s cubic-bezier(.22,1,.36,1), max-width 0.35s ease, max-height 0.35s ease;
+        }
+        .wbs-chat-window.in-chat {
+          width: 440px;
+          height: 620px;
+          max-width: calc(100vw - 32px);
+          max-height: calc(100vh - 110px);
         }
         @keyframes chatSlideIn {
           from { opacity: 0; transform: translateY(20px) scale(0.97); }
           to   { opacity: 1; transform: translateY(0)   scale(1);    }
         }
+
+        /* ── TOAST NOTIFICAÇÃO ── */
+        .wbs-toast-notification {
+          position: fixed;
+          bottom: 86px;
+          right: 20px;
+          background: rgba(21, 34, 56, 0.95);
+          backdrop-filter: blur(14px);
+          border: 1px solid rgba(54, 194, 172, 0.45);
+          box-shadow: 0 12px 32px rgba(0,0,0,0.4), 0 0 16px rgba(54,194,172,0.25);
+          border-radius: 14px;
+          padding: 10px 14px;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          color: #fff;
+          font-size: 12.5px;
+          font-weight: 500;
+          z-index: 9998;
+          cursor: pointer;
+          animation: toastSlideIn 0.35s cubic-bezier(.22,1,.36,1) both;
+          transition: transform 0.2s, border-color 0.2s;
+        }
+        .wbs-toast-notification:hover {
+          border-color: #36c2ac;
+          transform: translateY(-2px);
+        }
+        @keyframes toastSlideIn {
+          from { opacity: 0; transform: translateY(12px) scale(0.95); }
+          to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .wbs-toast-close {
+          background: transparent; border: none;
+          color: rgba(255,255,255,0.5); cursor: pointer;
+          padding: 2px; display: flex; align-items: center; justify-content: center;
+          border-radius: 4px; transition: color 0.2s; font-size: 12px;
+        }
+        .wbs-toast-close:hover { color: #fff; }
 
         /* ── HEADER ── */
         .wbs-header {
@@ -424,8 +513,26 @@ export default function FloatingChat() {
         }
       `}</style>
 
+      {/* ── NOTIFICAÇÃO TOAST AO MINIMIZAR ── */}
+      {showToast && !isOpen && (
+        <div className="wbs-toast-notification" onClick={() => { setIsOpen(true); setShowToast(false); }}>
+          <span>{toastMessage}</span>
+          <button
+            type="button"
+            className="wbs-toast-close"
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowToast(false);
+            }}
+            title="Fechar notificação"
+          >
+            ✕
+          </button>
+        </div>
+      )}
+
       {/* ── FAB ── */}
-      <button className="wbs-fab" onClick={() => setIsOpen(!isOpen)} aria-label="Abrir chat">
+      <button className="wbs-fab" onClick={handleToggleChat} aria-label="Abrir chat">
         {isOpen ? (
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round">
             <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
@@ -440,7 +547,7 @@ export default function FloatingChat() {
 
       {/* ── JANELA DO CHAT ── */}
       {isOpen && (
-        <div className="wbs-chat-window">
+        <div className={`wbs-chat-window ${isIdentified ? "in-chat" : ""}`}>
 
           {/* Header */}
           <div className="wbs-header">
@@ -475,7 +582,7 @@ export default function FloatingChat() {
               )}
               <button
                 className="wbs-btn-icon"
-                onClick={() => setIsOpen(false)}
+                onClick={handleMinimize}
                 title="Minimizar"
               >
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
