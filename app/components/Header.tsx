@@ -95,9 +95,13 @@ export default function Header() {
 
           {/* CTA Button */}
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-            <Link href="/#contato" className="btn-primary text-xs">
+            <button
+              type="button"
+              onClick={() => window.dispatchEvent(new Event("open-floating-chat"))}
+              className="btn-primary text-xs cursor-pointer"
+            >
               Orçamento
-            </Link>
+            </button>
           </div>
         </div>
       </nav>
@@ -167,13 +171,16 @@ export default function Header() {
                 </div>
 
                 <div className="py-6">
-                  <Link
-                    href="/#contato"
-                    className="btn-primary w-full text-center block"
-                    onClick={() => setMobileMenuOpen(false)}
+                  <button
+                    type="button"
+                    className="btn-primary w-full text-center block cursor-pointer"
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      window.dispatchEvent(new Event("open-floating-chat"));
+                    }}
                   >
                     Solicitar Orçamento
-                  </Link>
+                  </button>
                 </div>
               </div>
             </div>

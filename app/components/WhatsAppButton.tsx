@@ -1,10 +1,11 @@
 'use client'
-import { openWhatsApp } from '@/lib/whatsapp';
 
-// Componente de Botão Flutuante do WhatsApp
+// Componente de Botão Flutuante do WhatsApp / Chatbot IA
 export default function WhatsAppButton() {
   const handleClick = () => {
-    openWhatsApp('Olá! Gostaria de solicitar um orçamento.');
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new Event("open-floating-chat"));
+    }
   };
 
   return (

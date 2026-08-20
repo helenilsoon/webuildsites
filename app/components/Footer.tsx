@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { EnvelopeIcon, MapPinIcon, PhoneIcon } from '@heroicons/react/24/outline';
 import Logo from './Logo';
-import { openWhatsApp } from '@/lib/whatsapp';
 
 export default function Footer() {
   return (
@@ -106,10 +105,10 @@ export default function Footer() {
                 <PhoneIcon className="w-5 h-5 text-[#61ce70] flex-shrink-0 mt-0.5" />
                 <button
                   type="button"
-                  onClick={() => openWhatsApp('Olá! Vim pelo site e gostaria de um orçamento.')}
+                  onClick={() => window.dispatchEvent(new Event("open-floating-chat"))}
                   className="text-sm hover:text-[#61ce70] transition-colors text-left bg-transparent border-0 p-0 cursor-pointer text-white/80"
                 >
-                  WhatsApp Comercial
+                  Atendimento IA & Orçamentos
                 </button>
               </li>
               <li className="flex items-start gap-3">

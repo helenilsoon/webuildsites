@@ -1,6 +1,13 @@
+'use client';
+
 import Image from 'next/image';
 
 export default function Services() {
+    function openChat() {
+        if (typeof window !== "undefined") {
+            window.dispatchEvent(new Event("open-floating-chat"));
+        }
+    }
 
     const services = [
         {
@@ -55,9 +62,19 @@ export default function Services() {
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-[#0061aa] via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-300" />
                             </div>
-                            <div className="p-6 flex flex-col flex-grow">
-                                <h3 className="text-xl font-semibold mb-3 text-white group-hover:text-[#61ce70] transition-colors duration-300">{service.title}</h3>
-                                <p className="text-white/80 leading-relaxed text-sm">{service.description}</p>
+                            <div className="p-6 flex flex-col flex-grow justify-between">
+                                <div>
+                                    <h3 className="text-xl font-semibold mb-3 text-white group-hover:text-[#61ce70] transition-colors duration-300">{service.title}</h3>
+                                    <p className="text-white/80 leading-relaxed text-sm mb-6">{service.description}</p>
+                                </div>
+                                <button
+                                    type="button"
+                                    onClick={openChat}
+                                    className="w-full py-2.5 px-4 rounded-xl bg-white/5 border border-white/10 hover:border-[#36c2ac] text-white text-xs font-semibold uppercase tracking-wider transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer group-hover:bg-[#36c2ac] group-hover:text-[#1d2b48]"
+                                >
+                                    <span>Solicitar Orçamento</span>
+                                    <span className="text-sm">→</span>
+                                </button>
                             </div>
                         </div>
                     ))}

@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { openWhatsApp } from '@/lib/whatsapp';
 
 interface WhatsAppCTAProps {
   message?: string;
@@ -10,13 +9,19 @@ interface WhatsAppCTAProps {
   ariaLabel?: string;
 }
 
-export default function WhatsAppCTA({ message, className, children, ariaLabel }: WhatsAppCTAProps) {
+export default function WhatsAppCTA({ className, children, ariaLabel }: WhatsAppCTAProps) {
+  const handleClick = () => {
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new Event("open-floating-chat"));
+    }
+  };
+
   return (
     <button
       type="button"
-      onClick={() => openWhatsApp(message)}
+      onClick={handleClick}
       className={className}
-      aria-label={ariaLabel || 'Falar no WhatsApp Comercial'}
+      aria-label={ariaLabel || 'Solicitar Orçamento no Chatbot IA'}
     >
       {children}
     </button>
