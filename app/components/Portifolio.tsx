@@ -7,13 +7,13 @@ const portfolio = [
     description:
       "SaaS completo para criação e gestão de campanhas de arrecadação com PIX automático. Suporta sorteios, vaquinhas, ações solidárias e causas comunitárias. Inclui dashboard em tempo real, blog e conformidade com LGPD.",
     tags: ["SaaS", "PIX Integrado", "Dashboard", "Next.js", "Blog"],
-    link: "https://myrifa.vercel.app",
+    link: "https://myrifa.com.br/",
     image: "/images/portfolio/myrifa.png",
   },
   {
     title: "Lena Mimos — E-commerce de Presentes Personalizados",
     description:
-      "Loja virtual completa com catálogo de 31 produtos, páginas individuais por produto, categorias, fluxo de pedido via WhatsApp e CDN próprio para imagens. Projeto real em operação em Manaus, AM.",
+      "Loja virtual completa com catálogo de produtos, páginas individuais por produto, categorias, fluxo de pedido via WhatsApp e CDN próprio para imagens. Projeto real em operação em Manaus, AM.",
     tags: ["E-commerce", "Next.js", "WhatsApp", "CDN", "SEO"],
     link: "https://lenamimos.com.br",
     image: "/images/portfolio/lenamimos.png",
