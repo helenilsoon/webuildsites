@@ -32,10 +32,12 @@ export default function ContatoSection() {
 
         {/* ── Título ── */}
         <h2 className="section-title">
-          Entre em <span style={{ color: "#36c2ac" }}>Contato</span>
+          Fale agora com nosso{" "}
+          <span style={{ color: "#36c2ac" }}>assistente com IA</span>
         </h2>
         <p className="section-subtitle">
-          Fale agora com nosso assistente virtual e tire suas dúvidas em tempo real.
+          Sem formulário. Sem espera. Nosso assistente responde na hora sobre
+          orçamentos, prazos e serviços — 24 horas por dia.
         </p>
 
         {/* ── Grid ── */}
@@ -189,6 +191,21 @@ export default function ContatoSection() {
                 </svg>
                 Iniciar Conversa Agora
               </button>
+
+              {/* WhatsApp secundário */}
+              <p style={{ fontSize: "0.85rem", color: "rgba(255,255,255,0.75)", marginBottom: "0.5rem" }}>
+                Prefere o WhatsApp?{" "}
+                <a
+                  href="https://wa.me/5592XXXXXXXXX"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Abrir conversa no WhatsApp"
+                  style={{ color: "#61ce70", textDecoration: "none", fontWeight: 600 }}
+                >
+                  {/* TODO: substituir 5592XXXXXXXXX pelo número real */}
+                  Falar pelo WhatsApp →
+                </a>
+              </p>
 
               <p style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.45)" }}>
                 Ou envie um e-mail para{" "}
