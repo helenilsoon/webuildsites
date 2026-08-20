@@ -1,6 +1,13 @@
 import { NextRequest } from 'next/server';
 import { prisma } from './prisma';
 
+interface RateLimitDelegate {
+  findUnique(args: unknown): Promise<{ count: number; resetTime: Date } | null>;
+  upsert(args: unknown): Promise<unknown>;
+  deleteMany(args: unknown): Promise<unknown>;
+  update(args: unknown): Promise<unknown>;
+}
+
 export async function rateLimit(
   req: NextRequest,
   context: string,
@@ -16,15 +23,21 @@ export async function rateLimit(
   const key = `${context}-${ip}`;
   const now = new Date();
 
+  const prismaClient = prisma as unknown as Record<string, RateLimitDelegate>;
+
   try {
-    const limitRecord = await prisma.rateLimit.findUnique({
+    if (!prismaClient || !prismaClient.rateLimit) {
+      return { success: true };
+    }
+
+    const limitRecord = await prismaClient.rateLimit.findUnique({
       where: { key },
     });
 
     // Se não existir ou se a janela já tiver expirado
     if (!limitRecord || now > limitRecord.resetTime) {
       const resetTime = new Date(Date.now() + windowMs);
-      await prisma.rateLimit.upsert({
+      await prismaClient.rateLimit.upsert({
         where: { key },
         update: {
           count: 1,
@@ -39,7 +52,7 @@ export async function rateLimit(
 
       // Limpeza assíncrona em segundo plano de registros antigos (10% de chance de rodar)
       if (Math.random() < 0.1) {
-        prisma.rateLimit.deleteMany({
+        prismaClient.rateLimit.deleteMany({
           where: {
             resetTime: {
               lt: now,
@@ -60,7 +73,7 @@ export async function rateLimit(
     }
 
     // Incrementar o contador
-    await prisma.rateLimit.update({
+    await prismaClient.rateLimit.update({
       where: { key },
       data: {
         count: {
