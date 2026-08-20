@@ -6,8 +6,8 @@ import logo from "@/public/images/logo_webuildSites-com-gradiente-branco-768x151
 
 export default function Logo() {
     return (
-        <Link href="#">
-            <Image src={logo} alt="" width={200} />
+        <Link href="/">
+            <Image src={logo} alt="WeBuildSites Logo" width={200} priority />
         </Link>
     )
 }
