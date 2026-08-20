@@ -12,15 +12,27 @@ type Message = {
 };
 
 export default function FloatingChat() {
+  // ── Leitura inicial do sessionStorage ──
   const [isOpen, setIsOpen] = useState(false);
-  const [isIdentified, setIsIdentified] = useState(false);
+  const [isIdentified, setIsIdentified] = useState(() => {
+    try { return JSON.parse(sessionStorage.getItem("wbs_identified") || "false"); } catch { return false; }
+  });
   const [isSendingProposal, setIsSendingProposal] = useState(false);
-  const [conversationId, setConversationId] = useState<string | null>(null);
-  const [userData, setUserData] = useState({ name: "", email: "", whatsapp: "" });
+  const [conversationId, setConversationId] = useState<string | null>(() => {
+    try { return sessionStorage.getItem("wbs_conv_id"); } catch { return null; }
+  });
+  const [userData, setUserData] = useState(() => {
+    try { return JSON.parse(sessionStorage.getItem("wbs_user") || "{}") || { name: "", email: "", whatsapp: "" }; } catch { return { name: "", email: "", whatsapp: "" }; }
+  });
   const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState<Message[]>([
-    { role: "assistant", text: "Olá 👋 Sou o assistente da WebuildSites! Como posso ajudar você hoje?" },
-  ]);
+  const [messages, setMessages] = useState<Message[]>(() => {
+    try {
+      const saved = sessionStorage.getItem("wbs_messages");
+      return saved ? JSON.parse(saved) : [{ role: "assistant", text: "Olá 👋 Sou o assistente da WebuildSites! Como posso ajudar você hoje?" }];
+    } catch {
+      return [{ role: "assistant", text: "Olá 👋 Sou o assistente da WebuildSites! Como posso ajudar você hoje?" }];
+    }
+  });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showToast, setShowToast] = useState(false);
@@ -28,6 +40,25 @@ export default function FloatingChat() {
   const [unreadCount, setUnreadCount] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const wasLoadingRef = useRef(false);
+
+  // ── Sincronização com sessionStorage ──
+  useEffect(() => {
+    try { sessionStorage.setItem("wbs_identified", JSON.stringify(isIdentified)); } catch {}
+  }, [isIdentified]);
+
+  useEffect(() => {
+    try { sessionStorage.setItem("wbs_user", JSON.stringify(userData)); } catch {}
+  }, [userData]);
+
+  useEffect(() => {
+    try { sessionStorage.setItem("wbs_messages", JSON.stringify(messages)); } catch {}
+  }, [messages]);
+
+  useEffect(() => {
+    try {
+      if (conversationId) sessionStorage.setItem("wbs_conv_id", conversationId);
+    } catch {}
+  }, [conversationId]);
 
   useEffect(() => {
     if (isOpen) {
@@ -206,6 +237,12 @@ export default function FloatingChat() {
     setError("");
     setMessage("");
     setConversationId(null);
+    try {
+      sessionStorage.removeItem("wbs_identified");
+      sessionStorage.removeItem("wbs_user");
+      sessionStorage.removeItem("wbs_messages");
+      sessionStorage.removeItem("wbs_conv_id");
+    } catch {}
   };
 
   return (
@@ -215,8 +252,8 @@ export default function FloatingChat() {
           position: fixed;
           bottom: 90px;
           right: 20px;
-          width: 360px;
-          height: 540px;
+          width: 400px;
+          height: 580px;
           border-radius: 20px;
           display: flex;
           flex-direction: column;
@@ -228,8 +265,8 @@ export default function FloatingChat() {
           transition: width 0.35s cubic-bezier(.22,1,.36,1), height 0.35s cubic-bezier(.22,1,.36,1), max-width 0.35s ease, max-height 0.35s ease;
         }
         .wbs-chat-window.in-chat {
-          width: 440px;
-          height: 620px;
+          width: 500px;
+          height: 700px;
           max-width: calc(100vw - 32px);
           max-height: calc(100vh - 110px);
         }
@@ -540,8 +577,9 @@ export default function FloatingChat() {
           box-shadow: 0 12px 32px rgba(0,0,0,0.4), 0 0 24px rgba(54,194,172,0.4);
         }
 
-        @media (max-width: 400px) {
-          .wbs-chat-window { width: calc(100vw - 24px); right: 12px; }
+        @media (max-width: 520px) {
+          .wbs-chat-window { width: calc(100vw - 24px); right: 12px; bottom: 80px; }
+          .wbs-chat-window.in-chat { width: calc(100vw - 24px); height: calc(100vh - 100px); }
         }
       `}</style>
 
