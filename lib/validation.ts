@@ -21,7 +21,8 @@ export const userDataSchema = z.object({
     }),
   email: z.string()
     .email('Email inválido')
-    .max(100, 'Email muito longo')
+    .max(100, 'Email muito longo'),
+  whatsapp: z.string().optional().nullable()
 });
 
 // Schema principal para validação da requisição do chat

@@ -16,10 +16,10 @@ export default function FloatingChat() {
   const [isIdentified, setIsIdentified] = useState(false);
   const [isSendingProposal, setIsSendingProposal] = useState(false);
   const [conversationId, setConversationId] = useState<string | null>(null);
-  const [userData, setUserData] = useState({ name: "", email: "" });
+  const [userData, setUserData] = useState({ name: "", email: "", whatsapp: "" });
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<Message[]>([
-    { role: "assistant", text: "Olá 👋 Sou o assistente da WebuildSites! Como posso ajudar?" },
+    { role: "assistant", text: "Olá 👋 Sou o assistente da WebuildSites! Como posso ajudar você hoje?" },
   ]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -81,6 +81,36 @@ export default function FloatingChat() {
     setLoading(false);
   };
 
+  const handleQuickReply = (quickText: string) => {
+    if (loading) return;
+    const userMessage: Message = { role: "user", text: quickText };
+    const updatedMessages = [...messages, userMessage];
+
+    setMessages(updatedMessages);
+    setMessage("");
+    setLoading(true);
+    setIsSendingProposal(quickText.trim().toLowerCase() === "proposta");
+
+    fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ messages: updatedMessages, userData, conversationId }),
+    })
+      .then(async (res) => {
+        if (!res.ok) {
+          const errorData = await res.json();
+          setMessages((prev) => [...prev, { role: "assistant", text: `❌ ${errorData.reply}` }]);
+        } else {
+          const data = await res.json();
+          setMessages((prev) => [...prev, { role: "assistant", text: data.reply }]);
+        }
+      })
+      .catch(() => {
+        setMessages((prev) => [...prev, { role: "assistant", text: "Desculpe, ocorreu um erro. Tente novamente." }]);
+      })
+      .finally(() => setLoading(false));
+  };
+
   const handleStartChat = async () => {
     setError("");
     if (!userData.name || !userData.email) { setError("Por favor, preencha nome e email"); return; }
@@ -101,7 +131,7 @@ export default function FloatingChat() {
       setConversationId(responseData.conversationId);
       setIsIdentified(true);
       setError("");
-      setMessages([{ role: "assistant", text: `Prazer, **${userData.name}**! 👋 Como posso ajudar você hoje com seu projeto?` }]);
+      setMessages([{ role: "assistant", text: `Prazer, **${userData.name}**! 👋 Como posso ajudar você hoje com seu projeto digital?` }]);
     } catch {
       setError("Erro de conexão. Tente novamente.");
     }
@@ -109,7 +139,7 @@ export default function FloatingChat() {
 
   const handleReset = () => {
     setIsIdentified(false);
-    setUserData({ name: "", email: "" });
+    setUserData({ name: "", email: "", whatsapp: "" });
     setMessages([{ role: "assistant", text: "Olá 👋 Sou o assistente da WebuildSites! Como posso ajudar?" }]);
     setError("");
     setMessage("");
@@ -187,27 +217,27 @@ export default function FloatingChat() {
           flex: 1;
           background: #1d2b48;
           display: flex; flex-direction: column; justify-content: center;
-          padding: 28px 24px; gap: 0;
+          padding: 24px 20px; gap: 0;
         }
         .wbs-identify-title {
           font-size: 17px; font-weight: 700; color: #fff;
-          margin-bottom: 6px;
+          margin-bottom: 4px;
         }
         .wbs-identify-sub {
-          font-size: 13px; color: rgba(255,255,255,0.55);
-          margin-bottom: 24px; line-height: 1.5;
+          font-size: 12.5px; color: rgba(255,255,255,0.55);
+          margin-bottom: 18px; line-height: 1.4;
         }
-        .wbs-field { margin-bottom: 14px; }
+        .wbs-field { margin-bottom: 12px; }
         .wbs-label {
-          display: block; font-size: 11px; font-weight: 600;
+          display: block; font-size: 10.5px; font-weight: 600;
           letter-spacing: 0.08em; text-transform: uppercase;
-          color: rgba(255,255,255,0.5); margin-bottom: 6px;
+          color: rgba(255,255,255,0.5); margin-bottom: 5px;
         }
         .wbs-input {
           width: 100%; background: rgba(255,255,255,0.06);
           border: 1px solid rgba(255,255,255,0.12);
-          border-radius: 10px; padding: 11px 14px;
-          color: #fff; font-size: 14px; font-family: inherit;
+          border-radius: 10px; padding: 10px 12px;
+          color: #fff; font-size: 13.5px; font-family: inherit;
           transition: border-color 0.2s, box-shadow 0.2s;
           outline: none;
         }
@@ -218,14 +248,14 @@ export default function FloatingChat() {
         }
         .wbs-error {
           background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.3);
-          border-radius: 8px; padding: 9px 12px;
-          font-size: 12px; color: #fca5a5; margin-bottom: 14px;
+          border-radius: 8px; padding: 8px 12px;
+          font-size: 12px; color: #fca5a5; margin-bottom: 12px;
         }
         .wbs-start-btn {
-          width: 100%; padding: 13px;
+          width: 100%; padding: 12px;
           background: linear-gradient(180deg, #36c2ac 0%, #0061aa 100%);
           border: none; border-radius: 10px; color: #fff;
-          font-size: 14px; font-weight: 600; letter-spacing: 0.04em;
+          font-size: 13.5px; font-weight: 600; letter-spacing: 0.04em;
           cursor: pointer; transition: opacity 0.2s, transform 0.2s;
           display: flex; align-items: center; justify-content: center; gap: 8px;
           box-shadow: 0 4px 16px rgba(54,194,172,0.3);
@@ -233,6 +263,11 @@ export default function FloatingChat() {
         }
         .wbs-start-btn:hover { opacity: 0.88; transform: translateY(-1px); }
         .wbs-start-btn:active { transform: translateY(0); }
+        .wbs-lgpd-note {
+          font-size: 11px; color: rgba(255,255,255,0.45);
+          text-align: center; margin-top: 10px;
+          display: flex; align-items: center; justify-content: center; gap: 4px;
+        }
 
         /* ── MESSAGES ── */
         .wbs-messages {
@@ -283,6 +318,27 @@ export default function FloatingChat() {
         .wbs-bubble code {
           background: rgba(0,0,0,0.25); border-radius: 4px;
           padding: 1px 5px; font-size: 12px;
+        }
+
+        /* ── CHIPS DE OPÇÕES RÁPIDAS ── */
+        .wbs-chips-container {
+          display: flex; overflow-x: auto; gap: 6px;
+          padding: 8px 12px; background: #152238;
+          border-top: 1px solid rgba(255,255,255,0.05);
+          scrollbar-width: none;
+        }
+        .wbs-chips-container::-webkit-scrollbar { display: none; }
+        .wbs-chip {
+          background: rgba(54,194,172,0.1);
+          border: 1px solid rgba(54,194,172,0.25);
+          color: #36c2ac; border-radius: 20px;
+          padding: 5px 11px; font-size: 11px; font-weight: 500;
+          cursor: pointer; transition: all 0.2s ease;
+          white-space: nowrap; flex-shrink: 0;
+        }
+        .wbs-chip:hover {
+          background: #36c2ac; color: #1d2b48;
+          border-color: #36c2ac; transform: translateY(-1px);
         }
 
         /* ── INPUT ── */
@@ -370,7 +426,14 @@ export default function FloatingChat() {
 
           {/* Header */}
           <div className="wbs-header">
-            <div className="wbs-avatar">🧑‍💻</div>
+            <div className="wbs-avatar">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 2a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2 2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z"/>
+                <rect x="4" y="8" width="16" height="12" rx="2"/>
+                <circle cx="9" cy="13" r="1"/>
+                <circle cx="15" cy="13" r="1"/>
+              </svg>
+            </div>
             <div className="wbs-header-info">
               <div className="wbs-header-name">WebuildSites</div>
               <div className="wbs-header-status">
@@ -413,7 +476,7 @@ export default function FloatingChat() {
               </div>
 
               <div className="wbs-field">
-                <label className="wbs-label">Seu nome</label>
+                <label className="wbs-label">Seu nome *</label>
                 <input
                   className="wbs-input"
                   type="text"
@@ -425,13 +488,25 @@ export default function FloatingChat() {
               </div>
 
               <div className="wbs-field">
-                <label className="wbs-label">Seu e-mail</label>
+                <label className="wbs-label">Seu e-mail *</label>
                 <input
                   className="wbs-input"
                   type="email"
                   placeholder="Ex: joao@email.com"
                   value={userData.email}
                   onChange={(e) => { setUserData({ ...userData, email: e.target.value }); setError(""); }}
+                  onKeyDown={(e) => e.key === "Enter" && handleStartChat()}
+                />
+              </div>
+
+              <div className="wbs-field">
+                <label className="wbs-label">Seu WhatsApp (Opcional)</label>
+                <input
+                  className="wbs-input"
+                  type="tel"
+                  placeholder="Ex: (92) 99999-9999"
+                  value={userData.whatsapp}
+                  onChange={(e) => { setUserData({ ...userData, whatsapp: e.target.value }); setError(""); }}
                   onKeyDown={(e) => e.key === "Enter" && handleStartChat()}
                 />
               </div>
@@ -444,6 +519,10 @@ export default function FloatingChat() {
                 </svg>
                 Iniciar conversa
               </button>
+
+              <div className="wbs-lgpd-note">
+                🔒 Seus dados estão seguros e não enviamos spam.
+              </div>
             </div>
           ) : (
             <>
@@ -452,7 +531,7 @@ export default function FloatingChat() {
                 {messages.map((msg, i) => (
                   <div key={i} className={`wbs-msg-row ${msg.role}`}>
                     <div className={`wbs-msg-avatar ${msg.role}`}>
-                      {msg.role === "assistant" ? "🧑‍💻" : "👤"}
+                      {msg.role === "assistant" ? "🤖" : "👤"}
                     </div>
                     <div className={`wbs-bubble ${msg.role}`}>
                       <ReactMarkdown rehypePlugins={[rehypeSanitize]}>
@@ -464,7 +543,7 @@ export default function FloatingChat() {
 
                 {loading && (
                   <div className="wbs-msg-row">
-                    <div className="wbs-msg-avatar bot">🧑‍💻</div>
+                    <div className="wbs-msg-avatar bot">🤖</div>
                     <div className="wbs-bubble bot">
                       <TypingIndicator isProposal={isSendingProposal} />
                     </div>
@@ -472,6 +551,25 @@ export default function FloatingChat() {
                 )}
 
                 <div ref={messagesEndRef} />
+              </div>
+
+              {/* ── CHIPS DE OPÇÕES RÁPIDAS ── */}
+              <div className="wbs-chips-container">
+                <button type="button" className="wbs-chip" onClick={() => handleQuickReply("Quero criar um site institucional")}>
+                  🌐 Site Institucional
+                </button>
+                <button type="button" className="wbs-chip" onClick={() => handleQuickReply("Preciso de uma Landing Page")}>
+                  ⚡ Landing Page
+                </button>
+                <button type="button" className="wbs-chip" onClick={() => handleQuickReply("Quero criar um E-commerce")}>
+                  🛒 Loja Virtual
+                </button>
+                <button type="button" className="wbs-chip" onClick={() => handleQuickReply("Quais os valores dos serviços?")}>
+                  💰 Tabela de Preços
+                </button>
+                <button type="button" className="wbs-chip" onClick={() => handleQuickReply("PROPOSTA")}>
+                  📄 Solicitar Proposta
+                </button>
               </div>
 
               {/* ── INPUT ── */}
