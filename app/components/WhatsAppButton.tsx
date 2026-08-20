@@ -1,12 +1,10 @@
 'use client'
+import { openWhatsApp } from '@/lib/whatsapp';
+
 // Componente de Botão Flutuante do WhatsApp
 export default function WhatsAppButton() {
-  const phoneNumber = '5592991805753'; // Seu número
-  const message = 'Olá! Gostaria de solicitar um orçamento.'; // Mensagem padrão
-
   const handleClick = () => {
-    const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-    window.open(url, '_blank');
+    openWhatsApp('Olá! Gostaria de solicitar um orçamento.');
   };
 
   return (
