@@ -45,18 +45,20 @@ export default function Services() {
 
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {services.map((service, index) => (
-                        <div key={index} className="card group hover:border-[#36c2ac]/40 transition-all duration-300">
-                            <div className="relative w-16 h-16 mb-5 p-2 rounded-xl bg-gradient-to-br from-[#0061aa]/30 to-[#36c2ac]/10 border border-white/10 group-hover:border-[#61ce70]/50 group-hover:scale-105 transition-all duration-300 flex items-center justify-center overflow-hidden shadow-lg shadow-[#1d2b48]/50">
+                        <div key={index} className="card !p-0 overflow-hidden group hover:border-[#36c2ac]/40 transition-all duration-300 flex flex-col h-full">
+                            <div className="relative w-full h-52 bg-gradient-to-br from-[#1d2b48] to-[#0061aa]/40 overflow-hidden border-b border-white/10">
                                 <Image 
                                     src={service.image} 
                                     alt={service.title} 
-                                    width={64} 
-                                    height={64} 
-                                    className="object-contain w-full h-full drop-shadow-[0_0_8px_rgba(54,194,172,0.4)] group-hover:scale-110 transition-transform duration-300"
+                                    fill
+                                    className="object-cover group-hover:scale-105 transition-transform duration-500"
                                 />
+                                <div className="absolute inset-0 bg-gradient-to-t from-[#0061aa] via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-300" />
                             </div>
-                            <h3 className="text-xl font-semibold mb-3 text-white group-hover:text-[#61ce70] transition-colors duration-300">{service.title}</h3>
-                            <p className="text-white/80 leading-relaxed text-sm">{service.description}</p>
+                            <div className="p-6 flex flex-col flex-grow">
+                                <h3 className="text-xl font-semibold mb-3 text-white group-hover:text-[#61ce70] transition-colors duration-300">{service.title}</h3>
+                                <p className="text-white/80 leading-relaxed text-sm">{service.description}</p>
+                            </div>
                         </div>
                     ))}
                 </div>
