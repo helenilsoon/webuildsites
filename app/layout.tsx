@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { Poppins } from 'next/font/google';
 import './globals.css';
 import VisitTracker from './components/VisitTracker';
+import FloatingChat from './components/Chat';
+
 
 const poppins = Poppins({
   weight: ['400', '600', '700'],
@@ -104,6 +106,7 @@ export default function RootLayout({
       </head>
       <body className={`${poppins.className} bg-white text-white-400`}>
         <VisitTracker />
+        <FloatingChat />
         {children}
       </body>
     </html>

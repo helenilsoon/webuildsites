@@ -1,5 +1,5 @@
-import { Header, HeroSection, Services, About, CtaSection, Portifolio, 
-  Testimonials, ContactForm, Footer, Chat} from './components';
+import { Header, HeroSection, Services, About, CtaSection, Portifolio,
+  Testimonials, ContactForm, Footer } from './components';
 
 export default function Home() {
   return (
@@ -32,7 +32,6 @@ export default function Home() {
 
         {/* Final CTA Section */}
 
-       <Chat />
         {/* <FinalCTA /> */}
       </main>
       <Footer />

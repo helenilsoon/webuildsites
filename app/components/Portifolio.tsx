@@ -62,73 +62,134 @@ const portfolio = [
 
 export default function Portifolio() {
   return (
-    <section id="portfolio" className="py-20 bg-[#1d2b48]">
-      <div className="container mx-auto px-6 lg:px-8">
+    <section id="portfolio" className="py-24 bg-[#1d2b48] relative overflow-hidden">
+      {/* Luz de fundo decorativa */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(ellipse 70% 40% at 50% 0%, rgba(54,194,172,0.08) 0%, transparent 70%)",
+        }}
+      />
+
+      <div className="container mx-auto px-6 lg:px-8 relative z-10">
+        {/* Cabeçalho */}
         <div className="text-center mb-16">
+          <span
+            className="inline-block text-xs font-bold tracking-widest uppercase mb-3"
+            style={{ color: "#36c2ac" }}
+          >
+            Cases Reais
+          </span>
           <h2 className="section-title">
-            Nosso <span className="text-[#61ce70]">Portfólio</span>
+            Nosso{" "}
+            <span style={{ color: "#36c2ac" }}>Portfólio</span>
           </h2>
           <p className="section-subtitle">
-            Projetos reais, entregues e no ar. Clique em cada card para ver a demonstração.
+            Projetos reais, entregues e no ar. Clique em cada card para ver a demonstração ao vivo.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* Grid de cards */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-7">
           {portfolio.map((project, index) => (
-            <div
+            <a
               key={index}
-              className="group relative overflow-hidden rounded-xl bg-[#0061aa] border border-white/10 shadow-lg hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col"
+              href={project.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Ver projeto ${project.title}`}
+              className="group relative flex flex-col rounded-2xl overflow-hidden border border-white/10 shadow-lg hover:shadow-[0_20px_40px_rgba(0,0,0,0.4)] hover:-translate-y-2 focus-visible:outline-none focus-visible:ring-2"
+              style={{
+                background: "#0061aa",
+                transition: "transform 0.35s cubic-bezier(.22,.68,0,1.2), box-shadow 0.35s ease",
+              }}
             >
-              {/* Preview da Imagem */}
-              <div className="relative h-48 w-full overflow-hidden bg-slate-900 border-b border-white/10">
+              {/* Borda superior teal */}
+              <div
+                className="absolute top-0 left-0 right-0 h-[3px] z-10"
+                style={{ background: "linear-gradient(90deg, #36c2ac, #0061aa)" }}
+              />
+
+              {/* Badge numerado */}
+              <div
+                className="absolute top-4 left-4 z-20 w-8 h-8 rounded-full flex items-center justify-center text-xs font-black text-white shadow-lg"
+                style={{ background: "linear-gradient(135deg, #36c2ac, #0061aa)" }}
+              >
+                {String(index + 1).padStart(2, "0")}
+              </div>
+
+              {/* Imagem */}
+              <div className="relative h-52 w-full overflow-hidden bg-[#1d2b48] shrink-0">
                 <Image
                   src={project.image}
                   alt={`Screenshot do projeto ${project.title}`}
                   fill
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  className="object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                  className="object-cover object-top group-hover:scale-110 transition-transform duration-500"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0061aa] via-transparent to-transparent opacity-80" />
+                {/* Gradiente sobre a imagem */}
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    background: "linear-gradient(to bottom, transparent 40%, #0061aa 100%)",
+                  }}
+                />
+                {/* Overlay teal no hover */}
+                <div
+                  className="absolute inset-0 opacity-0 group-hover:opacity-15 transition-opacity duration-300"
+                  style={{ background: "#36c2ac" }}
+                />
               </div>
 
               {/* Corpo */}
-              <div className="p-6 flex flex-col flex-1 justify-between">
-                <div>
-                  <h3 className="text-lg font-bold text-white mb-2 leading-snug">
+              <div className="flex flex-col flex-1 p-6 gap-4">
+                <div className="flex-1">
+                  <h3 className="text-base font-bold text-white leading-snug mb-2">
                     {project.title}
                   </h3>
-                  <p className="text-white/85 text-sm mb-4 leading-relaxed">
+                  <p className="text-white/70 text-sm leading-relaxed line-clamp-3">
                     {project.description}
                   </p>
                 </div>
 
-                <div>
-                  {/* Tags */}
-                  <div className="flex flex-wrap gap-1.5 mb-5">
-                    {project.tags.map((tag, i) => (
-                      <span
-                        key={i}
-                        className="text-xs bg-[#61ce70]/20 text-[#61ce70] px-2 py-0.5 rounded font-medium"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
+                {/* Tags */}
+                <div className="flex flex-wrap gap-1.5">
+                  {project.tags.map((tag, i) => (
+                    <span
+                      key={i}
+                      className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full border"
+                      style={{
+                        color: "#36c2ac",
+                        borderColor: "rgba(54,194,172,0.35)",
+                        background: "rgba(54,194,172,0.12)",
+                      }}
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
 
-                  {/* Botão */}
-                  <a
-                    href={project.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={`Ver projeto ${project.title} em nova aba`}
-                    className="inline-flex items-center justify-center gap-2 w-full py-2.5 rounded-lg border border-[#61ce70]/40 text-[#61ce70] text-sm font-semibold hover:bg-[#61ce70]/10 transition-colors"
-                  >
-                    Ver Projeto
-                    <ArrowTopRightOnSquareIcon className="w-4 h-4" />
-                  </a>
+                {/* CTA */}
+                <div
+                  className="flex items-center justify-between pt-3 border-t border-white/10 text-sm font-semibold"
+                  style={{ color: "#36c2ac" }}
+                >
+                  <span className="group-hover:underline underline-offset-2">Ver Projeto</span>
+                  <ArrowTopRightOnSquareIcon className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
                 </div>
               </div>
-            </div>
+
+              {/* Gradiente de hover no card inteiro */}
+              <div
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300 rounded-2xl"
+                style={{
+                  background:
+                    "linear-gradient(200deg, rgba(54,194,172,0.08) 0%, transparent 60%)",
+                }}
+              />
+            </a>
           ))}
         </div>
       </div>
