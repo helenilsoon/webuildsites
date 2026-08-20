@@ -1,9 +1,16 @@
+'use client';
+
 import { ArrowRightIcon, CheckCircleIcon, SparklesIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
-import WhatsAppCTA from "./WhatsAppCTA";
 
 export default function HeroSection() {
+  function openChat() {
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new Event("open-floating-chat"));
+    }
+  }
+
   return (
     <section className="relative bg-[#1d2b48] py-20 lg:py-28 overflow-hidden mt-16 border-b border-white/10">
       {/* Luzes ambiente de fundo com efeito Blur */}
@@ -59,16 +66,17 @@ export default function HeroSection() {
 
             {/* Botões de Ação */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <WhatsAppCTA 
-                message="Olá! Vim pelo site da WeBuildSites e gostaria de solicitar um orçamento para o meu projeto."
+              <button 
+                type="button"
+                onClick={openChat}
                 className="btn-primary inline-flex items-center justify-center gap-2 text-base px-6 py-3.5 rounded-xl shadow-lg shadow-[#36c2ac]/25 hover:shadow-[#61ce70]/40 transition-all cursor-pointer"
               >
                 Solicitar Orçamento Grátis
                 <ArrowRightIcon className="w-5 h-5" />
-              </WhatsAppCTA>
+              </button>
 
               <Link
-                href="#servicos"
+                href="/#servicos"
                 className="btn-outline inline-flex items-center justify-center gap-2 text-base px-6 py-3.5 rounded-xl"
               >
                 Ver Nossos Serviços
@@ -94,7 +102,7 @@ export default function HeroSection() {
               </div>
 
               {/* Badge Flutuante 1: Performance */}
-              <div className="absolute -top-4 -left-4 bg-[#1d2b48]/90 border border-[#36c2ac]/40 backdrop-blur-md text-white px-4 py-2 rounded-xl shadow-lg flex items-center gap-2 animate-bounce-slow">
+              <div className="absolute -top-4 -left-4 bg-[#1d2b48]/90 border border-[#36c2ac]/40 backdrop-blur-md text-white px-4 py-2 rounded-xl shadow-lg flex items-center gap-2">
                 <span className="text-lg">⚡</span>
                 <div>
                   <p className="text-xs font-bold text-white">High Speed</p>
@@ -103,13 +111,17 @@ export default function HeroSection() {
               </div>
 
               {/* Badge Flutuante 2: Chatbot IA */}
-              <div className="absolute top-1/2 -right-6 -translate-y-1/2 bg-[#1d2b48]/90 border border-[#61ce70]/40 backdrop-blur-md text-white px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-2.5">
+              <button 
+                type="button"
+                onClick={openChat}
+                className="absolute top-1/2 -right-6 -translate-y-1/2 bg-[#1d2b48]/90 border border-[#61ce70]/40 backdrop-blur-md text-white px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-2.5 cursor-pointer hover:border-[#61ce70] transition-colors text-left"
+              >
                 <div className="w-2.5 h-2.5 rounded-full bg-[#61ce70] animate-ping" />
                 <div>
                   <p className="text-xs font-bold text-white">Chatbot IA Integrado</p>
-                  <p className="text-[10px] text-[#61ce70]">Atende 24h por dia</p>
+                  <p className="text-[10px] text-[#61ce70]">Clique para testar 24h</p>
                 </div>
-              </div>
+              </button>
 
               {/* Badge Flutuante 3: Projetos Reais */}
               <div className="absolute -bottom-4 left-6 bg-[#1d2b48]/90 border border-white/20 backdrop-blur-md text-white px-4 py-2 rounded-xl shadow-lg flex items-center gap-2">
