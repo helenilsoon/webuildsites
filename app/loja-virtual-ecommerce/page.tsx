@@ -9,6 +9,7 @@ import {
 } from '@heroicons/react/24/outline';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import WhatsAppCTA from '../components/WhatsAppCTA';
 
 export const metadata: Metadata = {
   title: 'Criação de Loja Virtual & E-commerce | WeBuildSites',
@@ -85,16 +86,14 @@ export default function LojaVirtualEcommercePage() {
                 Venda seus produtos 24 horas por dia com um e-commerce moderno, rápido e fácil de usar. Receba pagamentos via PIX e pedidos organizados no WhatsApp.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <a
-                  href="https://wa.me/5592991805753?text=Ol%C3%A1!%20Quero%20um%20or%C3%A7amento%20para%20criar%20minha%20Loja%20Virtual."
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-primary inline-flex items-center justify-center gap-2 text-base py-3.5 px-8"
-                  aria-label="Solicitar E-commerce no WhatsApp"
+                <WhatsAppCTA
+                  message="Olá! Quero um orçamento para criar minha Loja Virtual."
+                  className="btn-primary inline-flex items-center justify-center gap-2 text-base py-3.5 px-8 cursor-pointer"
+                  ariaLabel="Solicitar E-commerce no WhatsApp"
                 >
                   <ShoppingBagIcon className="w-5 h-5" />
                   Criar Minha Loja Virtual
-                </a>
+                </WhatsAppCTA>
                 <a
                   href="https://lenamimos.com.br"
                   target="_blank"
@@ -193,14 +192,13 @@ export default function LojaVirtualEcommercePage() {
             <p className="text-lg text-white/80 max-w-2xl mx-auto mb-8">
               Monte sua loja virtual e comece a vender sem pagar comissões por cada venda.
             </p>
-            <a
-              href="https://wa.me/5592991805753?text=Ol%C3%A1!%20Vim%20pela%20p%C3%A1gina%20de%20Loja%20Virtual%20e%20quero%20um%20or%C3%A7amento."
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-primary inline-flex items-center gap-2 text-lg py-4 px-10"
+            <WhatsAppCTA
+              message="Olá! Vim pela página de Loja Virtual e quero um orçamento."
+              className="btn-primary inline-flex items-center gap-2 text-lg py-4 px-10 cursor-pointer"
+              ariaLabel="Falar no WhatsApp comercial sobre e-commerce"
             >
-              Falar no WhatsApp (92) 99180-5753
-            </a>
+              Falar no WhatsApp Comercial
+            </WhatsAppCTA>
           </div>
         </section>
 

@@ -9,6 +9,7 @@ import {
 } from '@heroicons/react/24/outline';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import WhatsAppCTA from '../components/WhatsAppCTA';
 
 export const metadata: Metadata = {
   title: 'Sistema de Pedidos e Cardápio Digital com PIX para Restaurantes | WeBuildSites',
@@ -85,16 +86,14 @@ export default function SistemaParaRestaurantesPage() {
                 Tenha sua própria plataforma de pedidos online para seu restaurante ou delivery. Atenda seus clientes com velocidade, receba no PIX e elimine comissões abusivas.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <a
-                  href="https://wa.me/5592991805753?text=Ol%C3%A1!%20Quero%20um%20or%C3%A7amento%20do%20Sistema%20de%20Pedidos%20para%20Restaurantes."
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-primary inline-flex items-center justify-center gap-2 text-base py-3.5 px-8"
-                  aria-label="Solicitar Sistema para Restaurante no WhatsApp"
+                <WhatsAppCTA
+                  message="Olá! Quero um orçamento do Sistema de Pedidos para Restaurantes."
+                  className="btn-primary inline-flex items-center justify-center gap-2 text-base py-3.5 px-8 cursor-pointer"
+                  ariaLabel="Solicitar Sistema para Restaurante no WhatsApp"
                 >
                   <BuildingStorefrontIcon className="w-5 h-5" />
                   Testar Demonstração no WhatsApp
-                </a>
+                </WhatsAppCTA>
                 <Link
                   href="/#portfolio"
                   className="btn-outline inline-flex items-center justify-center gap-2 text-base py-3.5 px-8"
@@ -191,14 +190,13 @@ export default function SistemaParaRestaurantesPage() {
             <p className="text-lg text-white/80 max-w-2xl mx-auto mb-8">
               Fale conosco pelo WhatsApp e veja como é simples transformar suas vendas online.
             </p>
-            <a
-              href="https://wa.me/5592991805753?text=Ol%C3%A1!%20Vim%20pela%20p%C3%A1gina%20de%20Restaurantes%20e%20quero%20um%20or%C3%A7amento."
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-primary inline-flex items-center gap-2 text-lg py-4 px-10"
+            <WhatsAppCTA
+              message="Olá! Vim pela página de Restaurantes e quero um orçamento."
+              className="btn-primary inline-flex items-center gap-2 text-lg py-4 px-10 cursor-pointer"
+              ariaLabel="Falar no WhatsApp comercial sobre restaurantes"
             >
-              Falar no WhatsApp (92) 99180-5753
-            </a>
+              Falar no WhatsApp Comercial
+            </WhatsAppCTA>
           </div>
         </section>
 

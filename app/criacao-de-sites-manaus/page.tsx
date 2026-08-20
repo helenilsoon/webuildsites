@@ -10,6 +10,7 @@ import {
 } from '@heroicons/react/24/outline';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import WhatsAppCTA from '../components/WhatsAppCTA';
 
 export const metadata: Metadata = {
   title: 'Criação de Sites em Manaus | Estúdio Digital Especializado',
@@ -91,16 +92,14 @@ export default function CriacaoDeSitesManausPage() {
                 Transforme sua presença digital com sites ultra-rápidos, visual de alto impacto e assistente virtual de IA. Conquiste clientes em Manaus e todo o Brasil.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <a
-                  href="https://wa.me/5592991805753?text=Ol%C3%A1!%20Gostaria%20de%20um%20or%C3%A7amento%20para%20criar%20um%20site%20em%20Manaus."
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-primary inline-flex items-center justify-center gap-2 text-base py-3.5 px-8"
-                  aria-label="Falar pelo WhatsApp com consultor em Manaus"
+                <WhatsAppCTA
+                  message="Olá! Gostaria de um orçamento para criar um site em Manaus."
+                  className="btn-primary inline-flex items-center justify-center gap-2 text-base py-3.5 px-8 cursor-pointer"
+                  ariaLabel="Falar pelo WhatsApp com consultor em Manaus"
                 >
                   <ChatBubbleLeftRightIcon className="w-5 h-5" />
                   Solicitar Orçamento no WhatsApp
-                </a>
+                </WhatsAppCTA>
                 <Link
                   href="/#portfolio"
                   className="btn-outline inline-flex items-center justify-center gap-2 text-base py-3.5 px-8"
@@ -201,14 +200,13 @@ export default function CriacaoDeSitesManausPage() {
             <p className="text-lg text-white/80 max-w-2xl mx-auto mb-8">
               Fale diretamente com nossa equipe em Manaus e receba uma proposta em minutos.
             </p>
-            <a
-              href="https://wa.me/5592991805753?text=Ol%C3%A1!%20Vim%20pela%20p%C3%A1gina%20de%20Manaus%20e%20quero%20um%20or%C3%A7amento."
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-primary inline-flex items-center gap-2 text-lg py-4 px-10"
+            <WhatsAppCTA
+              message="Olá! Vim pela página de Manaus e quero um orçamento."
+              className="btn-primary inline-flex items-center gap-2 text-lg py-4 px-10 cursor-pointer"
+              ariaLabel="Falar no WhatsApp comercial em Manaus"
             >
-              Falar no WhatsApp (92) 99180-5753
-            </a>
+              Falar no WhatsApp Comercial
+            </WhatsAppCTA>
           </div>
         </section>
 

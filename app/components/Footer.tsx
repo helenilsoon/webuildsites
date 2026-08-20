@@ -1,6 +1,9 @@
+'use client';
+
 import Link from 'next/link';
 import { EnvelopeIcon, MapPinIcon, PhoneIcon } from '@heroicons/react/24/outline';
 import Logo from './Logo';
+import { openWhatsApp } from '@/lib/whatsapp';
 
 export default function Footer() {
   return (
@@ -56,11 +59,31 @@ export default function Footer() {
               Serviços
             </h4>
             <ul className="space-y-2">
-              <li className="text-sm">Sites Institucionais</li>
-              <li className="text-sm">E-commerce</li>
-              <li className="text-sm">Landing Pages</li>
-              <li className="text-sm">Sistemas Web e SaaS</li>
-              <li className="text-sm">Apps PWA</li>
+              <li>
+                <Link href="/criacao-de-sites-manaus" className="text-sm hover:text-[#36c2ac] transition-colors">
+                  Sites Institucionais
+                </Link>
+              </li>
+              <li>
+                <Link href="/loja-virtual-ecommerce" className="text-sm hover:text-[#36c2ac] transition-colors">
+                  E-commerce
+                </Link>
+              </li>
+              <li>
+                <Link href="/landing-page-profissional" className="text-sm hover:text-[#36c2ac] transition-colors">
+                  Landing Pages
+                </Link>
+              </li>
+              <li>
+                <Link href="/sistema-para-restaurantes" className="text-sm hover:text-[#36c2ac] transition-colors">
+                  Sistemas para Restaurantes
+                </Link>
+              </li>
+              <li>
+                <Link href="/igrejas" className="text-sm hover:text-[#36c2ac] transition-colors">
+                  Sistemas para Igrejas
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -81,15 +104,13 @@ export default function Footer() {
               </li>
               <li className="flex items-start gap-3">
                 <PhoneIcon className="w-5 h-5 text-[#61ce70] flex-shrink-0 mt-0.5" />
-                <a
-                  href="https://wa.me/5592991805753?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20um%20or%C3%A7amento."
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Falar pelo WhatsApp (92) 99180-5753"
-                  className="text-sm hover:text-[#61ce70] transition-colors"
+                <button
+                  type="button"
+                  onClick={() => openWhatsApp('Olá! Vim pelo site e gostaria de um orçamento.')}
+                  className="text-sm hover:text-[#61ce70] transition-colors text-left bg-transparent border-0 p-0 cursor-pointer text-white/80"
                 >
-                  WhatsApp: (92) 99180-5753
-                </a>
+                  WhatsApp Comercial
+                </button>
               </li>
               <li className="flex items-start gap-3">
                 <MapPinIcon className="w-5 h-5 text-[#61ce70] flex-shrink-0 mt-0.5" />

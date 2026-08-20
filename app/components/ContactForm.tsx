@@ -1,4 +1,6 @@
-"use client";
+'use client';
+
+import { openWhatsApp } from "@/lib/whatsapp";
 
 const steps = [
   {
@@ -195,15 +197,13 @@ export default function ContatoSection() {
               {/* WhatsApp secundário */}
               <p style={{ fontSize: "0.85rem", color: "rgba(255,255,255,0.75)", marginBottom: "0.5rem" }}>
                 Prefere o WhatsApp?{" "}
-                <a
-                  href="https://wa.me/5592991805753?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20um%20or%C3%A7amento."
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Abrir conversa no WhatsApp (92) 99180-5753"
-                  style={{ color: "#61ce70", textDecoration: "none", fontWeight: 600 }}
+                <button
+                  type="button"
+                  onClick={() => openWhatsApp('Olá! Vim pelo site e gostaria de um orçamento.')}
+                  style={{ color: "#61ce70", textDecoration: "none", fontWeight: 600, background: "none", border: "none", cursor: "pointer", padding: 0 }}
                 >
-                  Falar pelo WhatsApp (92) 99180-5753 →
-                </a>
+                  Falar no WhatsApp Comercial →
+                </button>
               </p>
 
               <p style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.45)" }}>

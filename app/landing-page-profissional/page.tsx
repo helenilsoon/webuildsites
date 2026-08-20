@@ -9,6 +9,7 @@ import {
 } from '@heroicons/react/24/outline';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import WhatsAppCTA from '../components/WhatsAppCTA';
 
 export const metadata: Metadata = {
   title: 'Criação de Landing Page Profissional para Anúncios | WeBuildSites',
@@ -85,16 +86,14 @@ export default function LandingPageProfissionalPage() {
                 Pare de rasgar dinheiro com anúncios enviando tráfego para páginas lentas. Desenvolvemos landing pages ultra-rápidas e otimizadas para transformar cliques em leads e vendas.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <a
-                  href="https://wa.me/5592991805753?text=Ol%C3%A1!%20Preciso%20de%20uma%20Landing%20Page%20profissional%20para%20meus%20an%C3%BAncios."
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-primary inline-flex items-center justify-center gap-2 text-base py-3.5 px-8"
-                  aria-label="Solicitar Landing Page no WhatsApp"
+                <WhatsAppCTA
+                  message="Olá! Preciso de uma Landing Page profissional para meus anúncios."
+                  className="btn-primary inline-flex items-center justify-center gap-2 text-base py-3.5 px-8 cursor-pointer"
+                  ariaLabel="Solicitar Landing Page no WhatsApp"
                 >
                   <ChatBubbleLeftRightIcon className="w-5 h-5" />
                   Criar Minha Landing Page
-                </a>
+                </WhatsAppCTA>
                 <Link
                   href="/#portfolio"
                   className="btn-outline inline-flex items-center justify-center gap-2 text-base py-3.5 px-8"
@@ -191,14 +190,13 @@ export default function LandingPageProfissionalPage() {
             <p className="text-lg text-white/80 max-w-2xl mx-auto mb-8">
               Fale conosco agora no WhatsApp e receba uma proposta sob medida para sua campanha.
             </p>
-            <a
-              href="https://wa.me/5592991805753?text=Ol%C3%A1!%20Vim%20pela%20p%C3%A1gina%20de%20Landing%20Page%20e%20quero%20um%20or%C3%A7amento."
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-primary inline-flex items-center gap-2 text-lg py-4 px-10"
+            <WhatsAppCTA
+              message="Olá! Vim pela página de Landing Page e quero um orçamento."
+              className="btn-primary inline-flex items-center gap-2 text-lg py-4 px-10 cursor-pointer"
+              ariaLabel="Falar no WhatsApp comercial sobre landing page"
             >
-              Falar no WhatsApp (92) 99180-5753
-            </a>
+              Falar no WhatsApp Comercial
+            </WhatsAppCTA>
           </div>
         </section>
 

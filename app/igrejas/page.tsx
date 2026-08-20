@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { ArrowTopRightOnSquareIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import WhatsAppCTA from '../components/WhatsAppCTA';
 
 export const metadata: Metadata = {
   title: 'Tecnologia para Igrejas e Ministérios | WeBuildSites',
@@ -85,15 +86,13 @@ export default function IgrejasPage() {
                 pastoral completo.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <a
-                  href="https://wa.me/5592991805753?text=Ol%C3%A1!%20Gostaria%20de%20saber%20mais%20sobre%20tecnologia%20para%20igrejas."
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-primary inline-flex items-center justify-center gap-2"
-                  aria-label="Falar pelo WhatsApp"
+                <WhatsAppCTA
+                  message="Olá! Gostaria de saber mais sobre tecnologia para igrejas."
+                  className="btn-primary inline-flex items-center justify-center gap-2 cursor-pointer"
+                  ariaLabel="Falar no WhatsApp comercial sobre igrejas"
                 >
-                  Falar pelo WhatsApp
-                </a>
+                  Falar no WhatsApp Comercial
+                </WhatsAppCTA>
                 <Link
                   href="#portfolio-igrejas"
                   className="btn-outline inline-flex items-center justify-center gap-2"
@@ -193,15 +192,13 @@ export default function IgrejasPage() {
                 Atendimento direto, sem burocracia. Conte o que sua igreja
                 precisa e montamos uma proposta.
               </p>
-              <a
-                href="https://wa.me/5592991805753?text=Ol%C3%A1!%20Gostaria%20de%20uma%20proposta%20de%20tecnologia%20para%20minha%20igreja."
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-primary inline-flex items-center justify-center gap-2"
-                aria-label="Falar pelo WhatsApp para solicitar orçamento"
+              <WhatsAppCTA
+                message="Olá! Gostaria de uma proposta de tecnologia para minha igreja."
+                className="btn-primary inline-flex items-center justify-center gap-2 cursor-pointer"
+                ariaLabel="Falar no WhatsApp comercial para solicitar proposta para igreja"
               >
-                Falar pelo WhatsApp
-              </a>
+                Falar no WhatsApp Comercial
+              </WhatsAppCTA>
             </div>
           </div>
         </section>
