@@ -60,7 +60,7 @@ const portfolioIgrejas = [
     description:
       'SaaS para campanhas de arrecadação com PIX automático. Ideal para eventos, projetos missionários e causas comunitárias.',
     tags: ['SaaS', 'PIX Integrado', 'Dashboard', 'Next.js'],
-    link: 'https://myrifa.vercel.app',
+    link: 'https://myrifa.com.br/',
     gradient: 'from-[#0061aa] to-[#36c2ac]',
   },
 ];
@@ -85,9 +85,8 @@ export default function IgrejasPage() {
                 pastoral completo.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                {/* TODO: substituir pelo número real */}
                 <a
-                  href="https://wa.me/5592XXXXXXXXX"
+                  href="https://wa.me/5592991805753?text=Ol%C3%A1!%20Gostaria%20de%20saber%20mais%20sobre%20tecnologia%20para%20igrejas."
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn-primary inline-flex items-center justify-center gap-2"
@@ -194,9 +193,8 @@ export default function IgrejasPage() {
                 Atendimento direto, sem burocracia. Conte o que sua igreja
                 precisa e montamos uma proposta.
               </p>
-              {/* TODO: substituir pelo número real */}
               <a
-                href="https://wa.me/5592XXXXXXXXX"
+                href="https://wa.me/5592991805753?text=Ol%C3%A1!%20Gostaria%20de%20uma%20proposta%20de%20tecnologia%20para%20minha%20igreja."
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-primary inline-flex items-center justify-center gap-2"

@@ -83,8 +83,7 @@ export default function RootLayout({
                 'Criação de sites, e-commerces e sistemas digitais para empresas e ministérios em Manaus e todo o Brasil',
               url: 'https://webuildsites.com.br',
               email: 'contato@webuildsites.com.br',
-              // TODO: substituir pelo número real
-              telephone: '+55-92-XXXXX-XXXX',
+              telephone: '+55-92-99180-5753',
               address: {
                 '@type': 'PostalAddress',
                 addressLocality: 'Manaus',
