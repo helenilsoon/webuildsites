@@ -43,9 +43,12 @@ export async function POST(req: Request) {
     const lastUserMessage = messages[messages.length - 1];
 
     const wantsProposal =
-      lastMessage.includes("proposta") ||
-      lastMessage.includes("orçamento") ||
-      lastMessage.includes("valor");
+      lastMessage === "proposta" ||
+      lastMessage.includes("enviar proposta") ||
+      lastMessage.includes("gerar proposta") ||
+      lastMessage.includes("receber proposta") ||
+      lastMessage.includes("manda a proposta") ||
+      lastMessage.includes("quero a proposta");
 
     // Salva mensagem do usuário no banco
     if (conversationId && lastUserMessage?.role === "user") {
@@ -77,10 +80,16 @@ A proposta deve conter:
 1. Apresentação
 2. Escopo do projeto
 3. Tecnologias utilizadas
-4. Prazo estimado
-5. Investimento
-6. Condições de pagamento
-7. Diferenciais
+4. Prazo estimado (mínimo de 7 dias úteis)
+5. Investimento (utilize a tabela de referência da WebuildSites:
+   - Landing Page: R$ 1.200,00 a R$ 1.800,00
+   - Site Institucional Simples: R$ 900,00 a R$ 1.500,00
+   - Site Institucional Completo: R$ 1.800,00 a R$ 3.500,00
+   - E-commerce / Loja Virtual: R$ 2.500,00 a R$ 5.000,00
+   - Sistema Web Personalizado: A partir de R$ 4.000,00
+   Selecione o valor adequado ao escopo discutido na conversa).
+6. Condições de pagamento (ex: 50% entrada + 50% na entrega ou parcelado em até 12x)
+7. Diferenciais (Design responsivo, SEO básico, velocidade, suporte 30 dias)
 8. Próximos passos
 
 ADICIONAL:
