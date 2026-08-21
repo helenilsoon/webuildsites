@@ -42,13 +42,7 @@ export async function POST(req: Request) {
     const lastMessage = messages[messages.length - 1]?.text?.toLowerCase() || "";
     const lastUserMessage = messages[messages.length - 1];
 
-    const wantsProposal =
-      lastMessage === "proposta" ||
-      lastMessage.includes("enviar proposta") ||
-      lastMessage.includes("gerar proposta") ||
-      lastMessage.includes("receber proposta") ||
-      lastMessage.includes("manda a proposta") ||
-      lastMessage.includes("quero a proposta");
+    const wantsProposal = lastMessage.trim() === "proposta";
 
     // Salva mensagem do usuário no banco
     if (conversationId && lastUserMessage?.role === "user") {
@@ -62,7 +56,23 @@ export async function POST(req: Request) {
     }
 
     // 🔥 PROPOSTA
-    if (wantsProposal && userData?.email) {
+    if (wantsProposal) {
+      if (!userData?.email) {
+        const reply = "Para enviar sua proposta, preciso do seu email. Pode me informar?";
+        if (conversationId) {
+          await prisma.message.create({
+            data: { conversationId, role: "assistant", text: reply },
+          }).catch((err: unknown) => console.error("Erro ao salvar resposta da solicitação de email:", err));
+        }
+        return NextResponse.json({ reply });
+      }
+
+      // Gera número único no banco antes de chamar a IA
+      const proposalCount = await prisma.proposal.count();
+      const sequentialNumber = String(proposalCount + 1).padStart(3, "0");
+      const today = new Date().toISOString().slice(0, 10);
+      const proposalNumber = `WBS-LP-${today}-${sequentialNumber}`;
+
       const proposalPrompt = `
 Você é um especialista da WebuildSites.
 
@@ -80,21 +90,15 @@ A proposta deve conter:
 1. Apresentação
 2. Escopo do projeto
 3. Tecnologias utilizadas
-4. Prazo estimado (mínimo de 7 dias úteis)
-5. Investimento (utilize a tabela de referência da WebuildSites:
-   - Landing Page: R$ 1.200,00 a R$ 1.800,00
-   - Site Institucional Simples: R$ 900,00 a R$ 1.500,00
-   - Site Institucional Completo: R$ 1.800,00 a R$ 3.500,00
-   - E-commerce / Loja Virtual: R$ 2.500,00 a R$ 5.000,00
-   - Sistema Web Personalizado: A partir de R$ 4.000,00
-   Selecione o valor adequado ao escopo discutido na conversa).
-6. Condições de pagamento (ex: 50% entrada + 50% na entrega ou parcelado em até 12x)
-7. Diferenciais (Design responsivo, SEO básico, velocidade, suporte 30 dias)
+4. Prazo estimado
+5. Investimento
+6. Condições de pagamento
+7. Diferenciais
 8. Próximos passos
 
 ADICIONAL:
 - Data atual: ${new Date().toLocaleDateString()}
-- Cada proposta deve ter um número único, seguindo este formato: WBS-LP-YYYY-MM-DD-XXX, onde XXX é um número sequencial que você deve gerar automaticamente.
+- Número da proposta: ${proposalNumber}
 - No final da proposta, inclua o rodapé padrão:
 
 Atenciosamente,
