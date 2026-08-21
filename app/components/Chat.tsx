@@ -801,9 +801,11 @@ export default function FloatingChat() {
                 <button type="button" className="wbs-chip" onClick={() => handleQuickReply("Quais os valores dos serviços?")}>
                   💰 Tabela de Preços
                 </button>
-                <button type="button" className="wbs-chip" onClick={() => handleQuickReply("PROPOSTA")}>
-                  📄 Solicitar Proposta
-                </button>
+                {(messages.length >= 4 || messages.some((m) => m.text.toUpperCase().includes("PROPOSTA"))) && (
+                  <button type="button" className="wbs-chip" onClick={() => handleQuickReply("PROPOSTA")}>
+                    📄 Solicitar Proposta
+                  </button>
+                )}
               </div>
 
               {/* ── INPUT ── */}
