@@ -16,8 +16,8 @@ export const userDataSchema = z.object({
   name: z.string()
     .min(2, 'Nome deve ter pelo menos 2 caracteres')
     .max(50, 'Nome muito longo (máximo 50 caracteres)')
-    .refine(name => /^[a-zA-ZÀ-ÿ\s]+$/.test(name), {
-      message: 'Nome deve conter apenas letras'
+    .refine(name => /^[a-zA-ZÀ-ÿ0-9\s.'-]+$/.test(name), {
+      message: 'Nome contém caracteres inválidos'
     }),
   email: z.string()
     .email('Email inválido')
