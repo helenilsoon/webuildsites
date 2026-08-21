@@ -58,7 +58,7 @@ export async function POST(req: Request) {
       }
     }
 
-    // 🛡️ Valida se conversationId existe no banco; se inválido ou ausente, cria/recupera para nunca perder histórico
+    // 🛡️ Valida se conversationId existe no banco; se inválido ou ausente, recupera por email/whatsapp ou cria conversa vinculada
     let validConversationId: string | undefined = undefined;
     let leadId: string | undefined = undefined;
 
@@ -74,11 +74,15 @@ export async function POST(req: Request) {
 
     if (!validConversationId) {
       let lead = userEmail ? await prisma.lead.findFirst({ where: { email: userEmail } }) : null;
+      if (!lead && userData?.whatsapp) {
+        lead = await prisma.lead.findFirst({ where: { whatsapp: userData.whatsapp } });
+      }
       if (!lead) {
+        const leadEmailToUse = userEmail || `visitante-${Date.now()}@webuildsites.local`;
         lead = await prisma.lead.create({
           data: {
-            name: userData?.name || "Cliente",
-            email: userEmail || `lead-${Date.now()}@webuildsites.temp`,
+            name: userData?.name || "Visitante Chat",
+            email: leadEmailToUse,
             whatsapp: userData?.whatsapp,
           }
         });
@@ -109,10 +113,14 @@ export async function POST(req: Request) {
 
     // 🔥 PROPOSTA
     if (wantsProposal) {
-      // Exige qualificação prévia (pelo menos 2 mensagens do usuário antes de pedir proposta)
+      // Exige qualificação prévia real: o assistente precisa ter orientado o cliente a pedir PROPOSTA ou deve haver pelo menos 3 mensagens do usuário com escopo
+      const assistantInvitedProposal = messages.some(
+        (m: ChatMessage) => m.role === "assistant" && m.text.toUpperCase().includes("PROPOSTA")
+      );
       const userMessages = messages.filter((m: ChatMessage) => m.role === "user");
-      if (userMessages.length < 2) {
-        const reply = "Para que eu possa gerar uma proposta personalizada e com prazos e valores adequados para você, preciso primeiro entender melhor o seu projeto! Que tipo de site ou sistema você pretende criar?";
+
+      if (!assistantInvitedProposal && userMessages.length < 3) {
+        const reply = "Para que eu possa gerar uma proposta comercial precisa com escopo, prazos e valores adequados para você, preciso primeiro entender melhor o seu projeto! Qual é o objetivo principal do seu site ou sistema?";
         if (validConversationId) {
           await prisma.message.create({
             data: { conversationId: validConversationId, role: "assistant", text: reply },
@@ -122,7 +130,7 @@ export async function POST(req: Request) {
       }
 
       if (!userEmail) {
-        const reply = "Para enviar sua proposta, preciso do seu e-mail. Pode me informar por aqui?";
+        const reply = "Para enviar sua proposta comercial detalhada, preciso do seu e-mail. Pode me informar por aqui?";
         if (validConversationId) {
           await prisma.message.create({
             data: { conversationId: validConversationId, role: "assistant", text: reply },
@@ -145,13 +153,17 @@ export async function POST(req: Request) {
         }
       }
 
-      // Gera número único no banco de forma atômica
-      const proposalCount = await prisma.proposal.count();
-      const sequentialNumber = String(proposalCount + 1).padStart(3, "0");
-      const today = new Date().toISOString().slice(0, 10);
-      const proposalNumber = `WBS-LP-${today}-${sequentialNumber}`;
+      // Gera proposta e número sequencial de forma atômica dentro de uma transação Prisma
+      let proposalContent = "";
+      let proposalNumber = "";
 
-      const proposalPrompt = `
+      await prisma.$transaction(async (tx) => {
+        const proposalCount = await tx.proposal.count();
+        const sequentialNumber = String(proposalCount + 1).padStart(3, "0");
+        const today = new Date().toISOString().slice(0, 10);
+        proposalNumber = `WBS-LP-${today}-${sequentialNumber}`;
+
+        const proposalPrompt = `
 Você é um especialista da WebuildSites.
 
 Crie uma proposta comercial extremamente profissional e detalhada para o cliente.
@@ -187,35 +199,43 @@ Construindo soluções digitais que impulsionam negócios.
 Formato profissional, claro e persuasivo.
 `;
 
-      const completion = await client.chat.completions.create({
-        model: "deepseek-chat",
-        temperature: 0.7,
-        messages: [{ role: "user", content: proposalPrompt }],
+        const completion = await client.chat.completions.create({
+          model: "deepseek-chat",
+          temperature: 0.7,
+          messages: [{ role: "user", content: proposalPrompt }],
+        });
+
+        proposalContent = completion.choices[0].message.content || "Erro ao gerar proposta.";
+
+        if (validConversationId) {
+          return await tx.proposal.create({
+            data: {
+              conversationId: validConversationId,
+              clientName: userData?.name || "Cliente",
+              clientEmail: userEmail,
+              proposalNumber,
+              content: proposalContent,
+              sentAt: new Date(),
+            },
+          });
+        }
+        return null;
       });
 
-      const proposal = completion.choices[0].message.content || "Erro ao gerar proposta.";
-
-      // Envia o email
-      await sendProposalEmail(userEmail, proposal).catch((err) => {
+      // Tenta enviar o e-mail e verifica o status real da transmissão
+      let emailSent = false;
+      try {
+        await sendProposalEmail(userEmail, proposalContent);
+        emailSent = true;
+      } catch (err) {
         console.error("Erro ao enviar email da proposta:", err);
-      });
+      }
 
-      const reply = `Perfeito! 🚀 Sua proposta foi enviada para seu e-mail: ${userEmail}. Verifique sua caixa de entrada.`;
+      const reply = emailSent
+        ? `Perfeito! 🚀 Sua proposta (${proposalNumber}) foi gerada e enviada para seu e-mail: ${userEmail}. Verifique sua caixa de entrada e spam.`
+        : `Sua proposta (${proposalNumber}) foi gerada e registrada com sucesso em nosso sistema! Tivemos uma oscilação no envio do e-mail para ${userEmail}, mas nossa equipe entrará em contato em breve para enviá-la.`;
 
-      // ✅ Salva a proposta completa no banco
       if (validConversationId) {
-        await prisma.proposal.create({
-          data: {
-            conversationId: validConversationId,
-            clientName: userData?.name || "Cliente",
-            clientEmail: userEmail,
-            proposalNumber,
-            content: proposal,
-            sentAt: new Date(),
-          },
-        }).catch((err: unknown) => console.error("Erro ao salvar proposta no banco:", err));
-
-        // Salva também a resposta do assistente no histórico de mensagens
         await prisma.message.create({
           data: { conversationId: validConversationId, role: "assistant", text: reply },
         }).catch((err: unknown) => console.error("Erro ao salvar resposta da proposta:", err));
