@@ -25,7 +25,34 @@ export async function POST(request: NextRequest) {
     }
 
     const result = await prisma.$transaction(async (tx) => {
-      const lead = await tx.lead.create({ data: validation.data });
+      let lead = null;
+
+      if (validation.data.email) {
+        lead = await tx.lead.findFirst({
+          where: { email: validation.data.email },
+        });
+      }
+
+      if (!lead && validation.data.whatsapp) {
+        lead = await tx.lead.findFirst({
+          where: { whatsapp: validation.data.whatsapp },
+        });
+      }
+
+      if (lead) {
+        lead = await tx.lead.update({
+          where: { id: lead.id },
+          data: {
+            name: validation.data.name || lead.name,
+            email: validation.data.email || lead.email,
+            whatsapp: validation.data.whatsapp || lead.whatsapp,
+            project: validation.data.project || lead.project,
+          },
+        });
+      } else {
+        lead = await tx.lead.create({ data: validation.data });
+      }
+
       const conversation = await tx.conversation.create({
         data: { leadId: lead.id }
       });
