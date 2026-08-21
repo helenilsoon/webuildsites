@@ -129,6 +129,7 @@ Formato profissional, claro e persuasivo.
             conversationId,
             clientName: userData.name,
             clientEmail: userData.email,
+            proposalNumber,
             content: proposal,
             sentAt: new Date(),
           },

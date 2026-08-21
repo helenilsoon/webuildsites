@@ -59,6 +59,7 @@ model Proposal {
   conversation   Conversation @relation(fields: [conversationId], references: [id])
   clientName     String
   clientEmail    String
+  proposalNumber String?
   content        String       @db.Text
   sentAt         DateTime
   createdAt      DateTime     @default(now())
