@@ -166,6 +166,16 @@ export default function FloatingChat() {
       }
 
       const data = await res.json();
+      if (data.conversationId && data.conversationId !== conversationId) {
+        setConversationId(data.conversationId);
+        try { sessionStorage.setItem("wbs_conv_id", data.conversationId); } catch {}
+      }
+      const emailMatch = userMessage.text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+      if (emailMatch && emailMatch[0] !== userData.email) {
+        const updatedUser = { ...userData, email: emailMatch[0] };
+        setUserData(updatedUser);
+        try { sessionStorage.setItem("wbs_user", JSON.stringify(updatedUser)); } catch {}
+      }
       setMessages((prev) => [...prev, { role: "assistant", text: data.reply }]);
     } catch {
       setMessages((prev) => [...prev, { role: "assistant", text: "Desculpe, ocorreu um erro. Tente novamente." }]);
@@ -195,6 +205,16 @@ export default function FloatingChat() {
           setMessages((prev) => [...prev, { role: "assistant", text: `❌ ${errorData.reply}` }]);
         } else {
           const data = await res.json();
+          if (data.conversationId && data.conversationId !== conversationId) {
+            setConversationId(data.conversationId);
+            try { sessionStorage.setItem("wbs_conv_id", data.conversationId); } catch {}
+          }
+          const emailMatch = quickText.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+          if (emailMatch && emailMatch[0] !== userData.email) {
+            const updatedUser = { ...userData, email: emailMatch[0] };
+            setUserData(updatedUser);
+            try { sessionStorage.setItem("wbs_user", JSON.stringify(updatedUser)); } catch {}
+          }
           setMessages((prev) => [...prev, { role: "assistant", text: data.reply }]);
         }
       })

@@ -44,25 +44,63 @@ export async function POST(req: Request) {
 
     const wantsProposal = lastMessage.trim() === "proposta";
 
-    // Tenta obter o email de userData ou extrair de mensagens anteriores
+    // 🔍 Tenta obter o email de userData ou extrair de mensagens anteriores
     let userEmail = userData?.email;
-    if (!userEmail) {
-      for (const m of messages) {
-        if (m.role === "user") {
-          const match = m.text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
-          if (match) {
-            userEmail = match[0];
-            break;
-          }
+    let emailFromChat: string | null = null;
+    for (const m of messages) {
+      if (m.role === "user") {
+        const match = m.text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+        if (match) {
+          emailFromChat = match[0];
+          userEmail = match[0];
+          break;
         }
       }
     }
 
+    // 🛡️ Valida se conversationId existe no banco; se inválido ou ausente, cria/recupera para nunca perder histórico
+    let validConversationId: string | undefined = undefined;
+    let leadId: string | undefined = undefined;
+
+    if (conversationId) {
+      const existingConv = await prisma.conversation.findUnique({
+        where: { id: conversationId },
+      });
+      if (existingConv) {
+        validConversationId = existingConv.id;
+        leadId = existingConv.leadId;
+      }
+    }
+
+    if (!validConversationId) {
+      let lead = userEmail ? await prisma.lead.findFirst({ where: { email: userEmail } }) : null;
+      if (!lead) {
+        lead = await prisma.lead.create({
+          data: {
+            name: userData?.name || "Cliente",
+            email: userEmail || `lead-${Date.now()}@webuildsites.temp`,
+            whatsapp: userData?.whatsapp,
+          }
+        });
+      }
+      const newConv = await prisma.conversation.create({
+        data: { leadId: lead.id }
+      });
+      validConversationId = newConv.id;
+      leadId = lead.id;
+    } else if (emailFromChat && leadId) {
+      // Atualiza o e-mail do lead no banco caso tenha sido fornecido outro e-mail durante o chat
+      await prisma.lead.update({
+        where: { id: leadId },
+        data: { email: emailFromChat }
+      }).catch((err) => console.error("Erro ao atualizar email do lead:", err));
+    }
+
     // Salva mensagem do usuário no banco
-    if (conversationId && lastUserMessage?.role === "user") {
+    if (validConversationId && lastUserMessage?.role === "user") {
       await prisma.message.create({
         data: {
-          conversationId,
+          conversationId: validConversationId,
           role: "user",
           text: lastUserMessage.text,
         },
@@ -75,35 +113,35 @@ export async function POST(req: Request) {
       const userMessages = messages.filter((m: ChatMessage) => m.role === "user");
       if (userMessages.length < 2) {
         const reply = "Para que eu possa gerar uma proposta personalizada e com prazos e valores adequados para você, preciso primeiro entender melhor o seu projeto! Que tipo de site ou sistema você pretende criar?";
-        if (conversationId) {
+        if (validConversationId) {
           await prisma.message.create({
-            data: { conversationId, role: "assistant", text: reply },
+            data: { conversationId: validConversationId, role: "assistant", text: reply },
           }).catch((err: unknown) => console.error("Erro ao salvar resposta de pré-qualificação:", err));
         }
-        return NextResponse.json({ reply });
+        return NextResponse.json({ reply, conversationId: validConversationId });
       }
 
       if (!userEmail) {
         const reply = "Para enviar sua proposta, preciso do seu e-mail. Pode me informar por aqui?";
-        if (conversationId) {
+        if (validConversationId) {
           await prisma.message.create({
-            data: { conversationId, role: "assistant", text: reply },
+            data: { conversationId: validConversationId, role: "assistant", text: reply },
           }).catch((err: unknown) => console.error("Erro ao salvar resposta da solicitação de email:", err));
         }
-        return NextResponse.json({ reply });
+        return NextResponse.json({ reply, conversationId: validConversationId });
       }
 
       // Trava de idempotência: verifica se já gerou proposta para esta conversa nos últimos 2 minutos
-      if (conversationId) {
+      if (validConversationId) {
         const recentProposal = await prisma.proposal.findFirst({
           where: {
-            conversationId,
+            conversationId: validConversationId,
             createdAt: { gte: new Date(Date.now() - 2 * 60 * 1000) }
           }
         });
         if (recentProposal) {
           const reply = `Sua proposta (${recentProposal.proposalNumber || "WBS"}) já foi enviada para seu e-mail: ${userEmail}. Por favor, verifique sua caixa de entrada e spam!`;
-          return NextResponse.json({ reply });
+          return NextResponse.json({ reply, conversationId: validConversationId });
         }
       }
 
@@ -158,15 +196,17 @@ Formato profissional, claro e persuasivo.
       const proposal = completion.choices[0].message.content || "Erro ao gerar proposta.";
 
       // Envia o email
-      await sendProposalEmail(userEmail, proposal);
+      await sendProposalEmail(userEmail, proposal).catch((err) => {
+        console.error("Erro ao enviar email da proposta:", err);
+      });
 
       const reply = `Perfeito! 🚀 Sua proposta foi enviada para seu e-mail: ${userEmail}. Verifique sua caixa de entrada.`;
 
       // ✅ Salva a proposta completa no banco
-      if (conversationId) {
+      if (validConversationId) {
         await prisma.proposal.create({
           data: {
-            conversationId,
+            conversationId: validConversationId,
             clientName: userData?.name || "Cliente",
             clientEmail: userEmail,
             proposalNumber,
@@ -177,11 +217,11 @@ Formato profissional, claro e persuasivo.
 
         // Salva também a resposta do assistente no histórico de mensagens
         await prisma.message.create({
-          data: { conversationId, role: "assistant", text: reply },
+          data: { conversationId: validConversationId, role: "assistant", text: reply },
         }).catch((err: unknown) => console.error("Erro ao salvar resposta da proposta:", err));
       }
 
-      return NextResponse.json({ reply });
+      return NextResponse.json({ reply, conversationId: validConversationId });
     }
 
     // 🤖 RESPOSTA NORMAL
@@ -203,9 +243,10 @@ DADOS DO CLIENTE CADASTRADO:
 - Nome: ${userData?.name || "Cliente"}
 - E-mail: ${userEmail || "Não informado"}
 
-REGRAS OBRIGATÓRIAS SOBRE DADOS DO CLIENTE:
-- O cliente já está cadastrado/identificado com o nome "${userData?.name || "Cliente"}" e e-mail "${userEmail || "não informado"}".
-- NUNCA peça o e-mail ou o nome do cliente novamente na conversa em hipótese alguma. Ele receberá a proposta automaticamente no e-mail cadastrado quando digitar PROPOSTA.
+REGRAS CRÍTICAS DE COMUNICAÇÃO:
+- NUNCA faça mais de UMA pergunta por mensagem. Faça rigorosamente UMA ÚNICA pergunta por vez ao cliente para manter a conversa fluida e fácil de responder.
+- O cliente já está cadastrado/identificado com o nome "${userData?.name || "Cliente"}" e e-mail "${userEmail || "não informado"}". NUNCA peça o e-mail ou o nome do cliente novamente na conversa em hipótese alguma.
+- Se o cliente enviar um briefing longo ou texto detalhado sobre a empresa/projeto (mesmo com vários parágrafos), aceite normalmente como INFORMAÇÃO DO PROJETO. Prossiga com a qualificação sem rejeitar como fora de contexto.
 
 EXPRESSÕES DE CORTESIA E PROJETOS SUPORTADOS:
 - Responda de forma natural e cortês a agradecimentos ou saudações ("olá", "tudo bem", "obrigado", "valeu", "entendi") e dê sequência à qualificação do projeto.
@@ -226,7 +267,7 @@ Se o cliente perguntar valor ou prazo antes de qualificar:
   - Landing page: R$ 1.200 a R$ 1.800
   - Blog ou site pessoal: R$ 1.000 a R$ 1.700
   - E-commerce ou projetos grandes: R$ 2.500 a R$ 5.000
-- Faça uma pergunta estratégica por vez para entender melhor o projeto.
+- Faça apenas UMA pergunta estratégica por vez.
 - Se o cliente informar um prazo inviável (ex: 1 a 3 dias), explique gentilmente que o prazo mínimo necessário para garantir alto padrão e testes da WebuildSites é de 7 dias úteis.
 - NUNCA peça para o cliente digitar PROPOSTA na primeira mensagem sem antes entender o escopo do projeto.
 
@@ -262,14 +303,14 @@ MENSAGENS FORA DE CONTEXTO (SPAM / SEGURANÇA):
 
     const reply = completion.choices[0].message.content || "Erro ao gerar resposta.";
 
-    // Salva resposta da IA
-    if (conversationId) {
+    // Salva resposta da IA no histórico
+    if (validConversationId) {
       await prisma.message.create({
-        data: { conversationId, role: "assistant", text: reply },
+        data: { conversationId: validConversationId, role: "assistant", text: reply },
       }).catch((err: unknown) => console.error("Erro ao salvar resposta da IA:", err));
     }
 
-    return NextResponse.json({ reply });
+    return NextResponse.json({ reply, conversationId: validConversationId });
 
   } catch (error) {
     console.error(error);
