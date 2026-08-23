@@ -2,11 +2,14 @@ import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { validateRequest, leadRequestSchema } from "@/lib/validation";
 import { rateLimit } from "@/lib/rateLimit";
+import { logger } from "@/lib/logger";
+import { generateConversationToken } from "@/lib/conversationToken";
 
 export async function POST(request: NextRequest) {
   
   const rateLimitResult = await rateLimit(request, "lead", 5, 60 * 1000); // 5 cadastros por minuto
   if (!rateLimitResult.success) {
+    logger.warn("Bloqueio de rate limit no endpoint /api/lead", "LeadAPI");
     return NextResponse.json(
       { success: false, error: "Muitas solicitações. Por favor, tente novamente mais tarde." },
       { status: 429 }
@@ -18,6 +21,7 @@ export async function POST(request: NextRequest) {
 
     const validation = validateRequest(leadRequestSchema, data);
     if (!validation.success) {
+      logger.warn("Validação do schema de Lead falhou", "LeadAPI", { error: validation.error });
       return Response.json(
         { success: false, error: validation.error },
         { status: 400 }
@@ -59,13 +63,21 @@ export async function POST(request: NextRequest) {
       return { lead, conversation };
     });
 
+    const conversationToken = generateConversationToken(result.conversation.id);
+
+    logger.info("Lead e conversa gerados com sucesso", "LeadAPI", {
+      leadId: result.lead.id,
+      conversationId: result.conversation.id,
+    });
+
     return Response.json({
       success: true,
-      conversationId: result.conversation.id
+      conversationId: result.conversation.id,
+      conversationToken,
     });
 
   } catch (error) {
-    console.error("Error creating lead:", error);
+    logger.error("Erro ao criar lead:", "LeadAPI", { error: String(error) });
     return Response.json(
       { success: false, error: "Erro ao processar solicitação" },
       { status: 500 }

@@ -21,6 +21,9 @@ export default function FloatingChat() {
   const [conversationId, setConversationId] = useState<string | null>(() => {
     try { return sessionStorage.getItem("wbs_conv_id"); } catch { return null; }
   });
+  const [conversationToken, setConversationToken] = useState<string | null>(() => {
+    try { return sessionStorage.getItem("wbs_conv_token"); } catch { return null; }
+  });
   const [userData, setUserData] = useState(() => {
     try { return JSON.parse(sessionStorage.getItem("wbs_user") || "{}") || { name: "", email: "", whatsapp: "" }; } catch { return { name: "", email: "", whatsapp: "" }; }
   });
@@ -57,8 +60,9 @@ export default function FloatingChat() {
   useEffect(() => {
     try {
       if (conversationId) sessionStorage.setItem("wbs_conv_id", conversationId);
+      if (conversationToken) sessionStorage.setItem("wbs_conv_token", conversationToken);
     } catch {}
-  }, [conversationId]);
+  }, [conversationId, conversationToken]);
 
   useEffect(() => {
     if (isOpen) {
@@ -155,7 +159,7 @@ export default function FloatingChat() {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: updatedMessages, userData, conversationId }),
+        body: JSON.stringify({ messages: updatedMessages, userData, conversationId, conversationToken }),
       });
 
       if (!res.ok) {
@@ -169,6 +173,10 @@ export default function FloatingChat() {
       if (data.conversationId && data.conversationId !== conversationId) {
         setConversationId(data.conversationId);
         try { sessionStorage.setItem("wbs_conv_id", data.conversationId); } catch {}
+      }
+      if (data.conversationToken && data.conversationToken !== conversationToken) {
+        setConversationToken(data.conversationToken);
+        try { sessionStorage.setItem("wbs_conv_token", data.conversationToken); } catch {}
       }
       const emailMatch = userMessage.text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
       if (emailMatch && emailMatch[0] !== userData.email) {
@@ -197,7 +205,7 @@ export default function FloatingChat() {
     fetch("/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messages: updatedMessages, userData, conversationId }),
+      body: JSON.stringify({ messages: updatedMessages, userData, conversationId, conversationToken }),
     })
       .then(async (res) => {
         if (!res.ok) {
@@ -208,6 +216,10 @@ export default function FloatingChat() {
           if (data.conversationId && data.conversationId !== conversationId) {
             setConversationId(data.conversationId);
             try { sessionStorage.setItem("wbs_conv_id", data.conversationId); } catch {}
+          }
+          if (data.conversationToken && data.conversationToken !== conversationToken) {
+            setConversationToken(data.conversationToken);
+            try { sessionStorage.setItem("wbs_conv_token", data.conversationToken); } catch {}
           }
           const emailMatch = quickText.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
           if (emailMatch && emailMatch[0] !== userData.email) {
@@ -242,6 +254,10 @@ export default function FloatingChat() {
 
       const responseData = await res.json();
       setConversationId(responseData.conversationId);
+      if (responseData.conversationToken) {
+        setConversationToken(responseData.conversationToken);
+        try { sessionStorage.setItem("wbs_conv_token", responseData.conversationToken); } catch {}
+      }
       setIsIdentified(true);
       setError("");
       setMessages([{ role: "assistant", text: `Prazer, **${userData.name}**! 👋 Como posso ajudar você hoje com seu projeto digital?` }]);
@@ -257,11 +273,13 @@ export default function FloatingChat() {
     setError("");
     setMessage("");
     setConversationId(null);
+    setConversationToken(null);
     try {
       sessionStorage.removeItem("wbs_identified");
       sessionStorage.removeItem("wbs_user");
       sessionStorage.removeItem("wbs_messages");
       sessionStorage.removeItem("wbs_conv_id");
+      sessionStorage.removeItem("wbs_conv_token");
     } catch {}
   };
 
