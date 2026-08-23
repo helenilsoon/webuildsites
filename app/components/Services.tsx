@@ -40,20 +40,35 @@ export default function Services() {
             title: 'Manutenção',
             description: 'Suporte contínuo e atualizações para manter seu site sempre atualizado e seguro.'
         },
+        {
+            image: '/images/services/social.png',
+            title: 'Redes Sociais',
+            description: 'Integração completa e gerenciamento visual da sua presença nas redes sociais.'
+        },
+        {
+            image: '/images/services/ecommerce.png',
+            title: 'E-commerce',
+            description: 'Lojas virtuais completas com catálogo de produtos, cálculo de frete e pagamentos.'
+        },
+        {
+            image: '/images/services/app.png',
+            title: 'Aplicativos Web & PWA',
+            description: 'Soluções instaláveis em dispositivos móveis sem necessidade de loja de aplicativos.'
+        }
     ];
 
     return (
-        <section id="servicos" className="py-20 bg-[#1d2b48]">
+        <section id="servicos" className="py-12 md:py-16 bg-[#1d2b48]">
             <div className="container mx-auto px-6 lg:px-8">
-                <div className="text-center mb-16">
-                    <h2 className="section-title">Nossos <span className="text-[#61ce70]">Serviços</span></h2>
-                    <p className="section-subtitle">Oferecemos soluções completas para sua presença digital, desde o design até a implementação e manutenção contínua.</p>
+                <div className="text-center mb-8 md:mb-10">
+                    <h2 className="section-title !mb-2">Nossos <span className="text-[#61ce70]">Serviços</span></h2>
+                    <p className="section-subtitle !mb-0 max-w-2xl text-sm md:text-base">Oferecemos soluções completas para sua presença digital, desde o design até a implementação e manutenção contínua.</p>
                 </div>
 
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
                     {services.map((service, index) => (
-                        <div key={index} className="card !p-0 overflow-hidden group hover:border-[#36c2ac]/40 transition-all duration-300 flex flex-col h-full">
-                            <div className="relative w-full h-52 bg-gradient-to-br from-[#1d2b48] to-[#0061aa]/40 overflow-hidden border-b border-white/10">
+                        <div key={index} className="card !p-0 overflow-hidden group hover:border-[#36c2ac]/40 transition-all duration-300 flex flex-col h-full rounded-xl">
+                            <div className="relative w-full h-36 bg-gradient-to-br from-[#1d2b48] to-[#0061aa]/40 overflow-hidden border-b border-white/10">
                                 <Image 
                                     src={service.image} 
                                     alt={service.title} 
@@ -62,18 +77,18 @@ export default function Services() {
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-[#0061aa] via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-300" />
                             </div>
-                            <div className="p-6 flex flex-col flex-grow justify-between">
+                            <div className="p-4 flex flex-col flex-grow justify-between">
                                 <div>
-                                    <h3 className="text-xl font-semibold mb-3 text-white group-hover:text-[#61ce70] transition-colors duration-300">{service.title}</h3>
-                                    <p className="text-white/80 leading-relaxed text-sm mb-6">{service.description}</p>
+                                    <h3 className="text-base font-semibold mb-2 text-white group-hover:text-[#61ce70] transition-colors duration-300">{service.title}</h3>
+                                    <p className="text-white/80 leading-snug text-xs mb-4">{service.description}</p>
                                 </div>
                                 <button
                                     type="button"
                                     onClick={openChat}
-                                    className="w-full py-2.5 px-4 rounded-xl bg-white/5 border border-white/10 hover:border-[#36c2ac] text-white text-xs font-semibold uppercase tracking-wider transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer group-hover:bg-[#36c2ac] group-hover:text-[#1d2b48]"
+                                    className="w-full py-2 px-3 rounded-lg bg-white/5 border border-white/10 hover:border-[#36c2ac] text-white text-[11px] font-semibold uppercase tracking-wider transition-all duration-300 flex items-center justify-center gap-1.5 cursor-pointer group-hover:bg-[#36c2ac] group-hover:text-[#1d2b48]"
                                 >
                                     <span>Solicitar Orçamento</span>
-                                    <span className="text-sm">→</span>
+                                    <span className="text-xs">→</span>
                                 </button>
                             </div>
                         </div>
@@ -81,6 +96,5 @@ export default function Services() {
                 </div>
             </div>
         </section>
-    )
-
+    );
 }
