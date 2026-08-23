@@ -44,6 +44,13 @@ function checkMemoryRateLimit(key: string, maxRequests: number, windowMs: number
   return { success: true };
 }
 
+interface RateLimitDelegate {
+  findUnique(args: unknown): Promise<{ count: number; resetTime: Date } | null>;
+  upsert(args: unknown): Promise<unknown>;
+  deleteMany(args: unknown): Promise<unknown>;
+  update(args: unknown): Promise<unknown>;
+}
+
 export async function rateLimit(
   req: NextRequest,
   context: string,
@@ -73,7 +80,7 @@ export async function rateLimit(
 
   // 2. Persistência e sincronização no PostgreSQL via Prisma
   try {
-    const prismaClient = prisma as unknown as Record<string, any>;
+    const prismaClient = prisma as unknown as Record<string, RateLimitDelegate>;
 
     if (!prismaClient || !prismaClient.rateLimit) {
       return memResult;
