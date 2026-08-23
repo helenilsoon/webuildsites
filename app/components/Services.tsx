@@ -9,7 +9,6 @@ interface ServiceItem {
   title: string;
   description: string;
   href?: string;
-  keywords: string;
 }
 
 export default function Services() {
@@ -23,62 +22,38 @@ export default function Services() {
         {
             image: '/images/services/institucional.png',
             title: 'Sites Institucionais',
-            description: 'Desenvolvimento de sites profissionais com alta velocidade, SEO local e foco em conversão de clientes.',
+            description: 'Desenvolvimento de sites profissionais com alta velocidade, SEO local e foco em conversão.',
             href: '/criacao-de-sites-manaus',
-            keywords: 'criação de sites institucionais manaus'
-        },
-        {
-            image: '/images/services/ecommerce.png',
-            title: 'Loja Virtual & E-commerce',
-            description: 'Lojas virtuais completas com catálogo de produtos, cálculo de frete, PIX automático e checkout seguro.',
-            href: '/loja-virtual-ecommerce',
-            keywords: 'desenvolvimento de e-commerce loja virtual'
         },
         {
             image: '/images/services/responsive.png',
-            title: 'Landing Pages de Alta Conversão',
-            description: 'Páginas de vendas otimizadas para campanhas de anúncios no Google e Instagram com alta taxa de conversão.',
-            href: '/landing-page-profissional',
-            keywords: 'landing page profissional alta conversão'
+            title: 'Landing Pages & E-commerce',
+            description: 'Páginas de alta conversão e lojas virtuais completas com catálogo e pagamentos seguros.',
+            href: '/loja-virtual-ecommerce',
         },
         {
             image: '/images/services/uxui.png',
             title: 'Sistemas para Restaurantes',
-            description: 'Cardápio digital com pedidos online via QR Code e PIX direto no caixa sem taxas por pedido.',
+            description: 'Cardápio digital interativo com gestão de pedidos e pagamento via PIX sem taxas.',
             href: '/sistema-para-restaurantes',
-            keywords: 'sistema cardápio digital restaurantes pix'
         },
         {
             image: '/images/services/hosting.png',
-            title: 'Sistemas para Igrejas & Ministérios',
-            description: 'Plataformas de gestão de células, discipulado, contribuições e eventos pastoral digital.',
+            title: 'Sistemas para Igrejas',
+            description: 'Plataforma para gestão de células, eventos, contribuições e acompanhamento pastoral.',
             href: '/igrejas',
-            keywords: 'sistema de gestão para igrejas pastoral'
         },
         {
             image: '/images/services/seo.png',
-            title: 'Otimização SEO & Performance',
-            description: 'Indexação no Google, Schema Markup estruturado e otimização de velocidade para primeiras posições.',
-            keywords: 'otimização seo primeira pagina google'
+            title: 'Otimização SEO',
+            description: 'Posicionamento nas primeiras páginas do Google com Schema Markup e velocidade extrema.',
+            href: '/landing-page-profissional',
         },
         {
             image: '/images/services/maintenance.png',
-            title: 'Manutenção & Suporte Técnico',
-            description: 'Suporte contínuo, backups automatizados, atualizações de segurança e monitoramento 24h.',
-            keywords: 'manutenção de sites suporte técnico'
+            title: 'Hospedagem & Manutenção',
+            description: 'Hospedagem segura de alto desempenho, backups diários e suporte técnico contínuo.',
         },
-        {
-            image: '/images/services/social.png',
-            title: 'Hospedagem & Nuvem de Alta Velocidade',
-            description: 'Servidores rápidos com CDN global, certificado SSL HTTPS grátis e e-mails corporativos.',
-            keywords: 'hospedagem de sites ssl gratis'
-        },
-        {
-            image: '/images/services/app.png',
-            title: 'Aplicativos Web & PWA',
-            description: 'Sistemas e PWAs instaláveis em smartphones com suporte a funcionamento offline e notificações.',
-            keywords: 'desenvolvimento pwa aplicativo web'
-        }
     ];
 
     return (
@@ -97,14 +72,14 @@ export default function Services() {
                     </p>
                 </div>
 
-                {/* Grid de Cards Otimizados */}
+                {/* Grid de 6 Cards Otimizados com Imagens Válidas */}
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
                     {services.map((service, index) => (
                         <article 
                             key={index} 
                             className="card !p-0 overflow-hidden group hover:border-[#36c2ac]/50 transition-all duration-300 flex flex-col h-full rounded-xl border border-white/10 bg-[#0061aa]/30"
                         >
-                            {/* Imagem com alt semântico */}
+                            {/* Imagem do serviço */}
                             <div className="relative w-full h-36 bg-gradient-to-br from-[#1d2b48] to-[#0061aa]/40 overflow-hidden border-b border-white/10">
                                 <Image 
                                     src={service.image} 
@@ -116,7 +91,7 @@ export default function Services() {
                                 <div className="absolute inset-0 bg-gradient-to-t from-[#0061aa] via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-300" />
                             </div>
 
-                            {/* Conteúdo textual com palavra-chave */}
+                            {/* Conteúdo textual */}
                             <div className="p-4 flex flex-col flex-grow justify-between">
                                 <div>
                                     <h3 className="text-base font-semibold mb-2 text-white group-hover:text-[#61ce70] transition-colors duration-300">
@@ -127,7 +102,7 @@ export default function Services() {
                                     </p>
                                 </div>
 
-                                {/* Ações: Link interno de SEO ou Chatbot */}
+                                {/* Ações: Link interno de SEO e Orçamento */}
                                 <div className="flex gap-2 items-center">
                                     {service.href ? (
                                         <Link
@@ -156,14 +131,14 @@ export default function Services() {
                 </div>
             </div>
 
-            {/* Schema.org Microdata JSON-LD para SEO */}
+            {/* Schema.org Microdata JSON-LD */}
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{
                     __html: JSON.stringify({
                         '@context': 'https://schema.org',
                         '@type': 'ItemList',
-                        name: 'Serviços de Desenvolvimento Web e Software — WeBuildSites',
+                        name: 'Serviços de Desenvolvimento Web — WeBuildSites',
                         itemListElement: services.map((s, idx) => ({
                             '@type': 'ListItem',
                             position: idx + 1,
