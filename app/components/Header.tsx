@@ -79,7 +79,7 @@ export default function Header() {
             </div>
 
             <Link
-              href="/#portfolio"
+              href="/portfolio"
               className="text-sm font-semibold leading-6 text-white hover:text-[#36c2ac] transition-colors uppercase tracking-wide"
             >
               Portfólio
@@ -154,7 +154,7 @@ export default function Header() {
                   </div>
 
                   <Link
-                    href="/#portfolio"
+                    href="/portfolio"
                     className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-white hover:bg-[#0061aa]"
                     onClick={() => setMobileMenuOpen(false)}
                   >

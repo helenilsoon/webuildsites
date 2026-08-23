@@ -4,6 +4,8 @@ import { sendProposalEmail } from "@/lib/mailer";
 import { rateLimit } from "@/lib/rateLimit";
 import { validateRequest, chatRequestSchema, ChatMessage } from "@/lib/validation";
 import { prisma } from "@/lib/prisma";
+import { logger } from "@/lib/logger";
+import { generateConversationToken, verifyConversationToken } from "@/lib/conversationToken";
 
 const client = new OpenAI({
   apiKey: process.env.DEEPSEEK_API_KEY,
@@ -14,6 +16,7 @@ export async function POST(req: Request) {
 
   const rateLimitResult = await rateLimit(req as NextRequest, "chat", 25, 60 * 1000);
   if (!rateLimitResult.success) {
+    logger.warn("Bloqueio de rate limit acionado no endpoint /api/chat", "ChatAPI");
     return NextResponse.json(
       {
         reply: "Muitas solicitações. Por favor, aguarde um momento antes de continuar.",
@@ -25,11 +28,14 @@ export async function POST(req: Request) {
 
   try {
     const body = await req.json();
-    console.log("body completo:", body);
-    console.log("conversationId recebido:", body.conversationId);
+    logger.info("Requisição recebida na ChatAPI", "ChatAPI", {
+      conversationId: body.conversationId,
+      hasToken: Boolean(body.conversationToken),
+    });
 
     const validation = validateRequest(chatRequestSchema, body);
     if (!validation.success) {
+      logger.warn("Validação do schema do Chat falhou", "ChatAPI", { error: validation.error });
       return NextResponse.json(
         { reply: `Dados inválidos: ${validation.error}` },
         { status: 400 }
@@ -38,6 +44,7 @@ export async function POST(req: Request) {
 
     const { messages, userData } = validation.data;
     const conversationId = body.conversationId as string | undefined;
+    const conversationToken = body.conversationToken as string | undefined;
 
     const lastMessage = messages[messages.length - 1]?.text?.toLowerCase() || "";
     const lastUserMessage = messages[messages.length - 1];
@@ -58,17 +65,26 @@ export async function POST(req: Request) {
       }
     }
 
-    // 🛡️ Valida se conversationId existe no banco; se inválido ou ausente, recupera por email/whatsapp ou cria conversa vinculada
+    // 🛡️ Valida se conversationId possui token assinado válido para impedir acesso indevido/enumeração
     let validConversationId: string | undefined = undefined;
     let leadId: string | undefined = undefined;
 
     if (conversationId) {
-      const existingConv = await prisma.conversation.findUnique({
-        where: { id: conversationId },
-      });
-      if (existingConv) {
-        validConversationId = existingConv.id;
-        leadId = existingConv.leadId;
+      const tokenVerification = verifyConversationToken(conversationToken);
+      if (tokenVerification.valid && tokenVerification.conversationId === conversationId) {
+        const existingConv = await prisma.conversation.findUnique({
+          where: { id: conversationId },
+        });
+        if (existingConv) {
+          validConversationId = existingConv.id;
+          leadId = existingConv.leadId;
+        }
+      } else {
+        logger.warn(
+          "Tentativa de vinculação a conversationId sem token válido. Criando nova sessão isolada.",
+          "ChatAPI",
+          { conversationId, tokenVerificationValid: tokenVerification.valid }
+        );
       }
     }
 
@@ -97,8 +113,11 @@ export async function POST(req: Request) {
       await prisma.lead.update({
         where: { id: leadId },
         data: { email: emailFromChat }
-      }).catch((err) => console.error("Erro ao atualizar email do lead:", err));
+      }).catch((err) => logger.error("Erro ao atualizar email do lead:", "ChatAPI", { error: String(err) }));
     }
+
+    // Gera token HMAC atualizado para devolução ao cliente
+    const responseConversationToken = generateConversationToken(validConversationId);
 
     // Salva mensagem do usuário no banco
     if (validConversationId && lastUserMessage?.role === "user") {
@@ -108,7 +127,7 @@ export async function POST(req: Request) {
           role: "user",
           text: lastUserMessage.text,
         },
-      }).catch((err: unknown) => console.error("Erro ao salvar mensagem do usuário:", err));
+      }).catch((err: unknown) => logger.error("Erro ao salvar mensagem do usuário:", "ChatAPI", { error: String(err) }));
     }
 
     // 🔥 PROPOSTA
@@ -124,9 +143,13 @@ export async function POST(req: Request) {
         if (validConversationId) {
           await prisma.message.create({
             data: { conversationId: validConversationId, role: "assistant", text: reply },
-          }).catch((err: unknown) => console.error("Erro ao salvar resposta de pré-qualificação:", err));
+          }).catch((err: unknown) => logger.error("Erro ao salvar resposta de pré-qualificação:", "ChatAPI", { error: String(err) }));
         }
-        return NextResponse.json({ reply, conversationId: validConversationId });
+        return NextResponse.json({
+          reply,
+          conversationId: validConversationId,
+          conversationToken: responseConversationToken,
+        });
       }
 
       if (!userEmail) {
@@ -134,9 +157,13 @@ export async function POST(req: Request) {
         if (validConversationId) {
           await prisma.message.create({
             data: { conversationId: validConversationId, role: "assistant", text: reply },
-          }).catch((err: unknown) => console.error("Erro ao salvar resposta da solicitação de email:", err));
+          }).catch((err: unknown) => logger.error("Erro ao salvar resposta da solicitação de email:", "ChatAPI", { error: String(err) }));
         }
-        return NextResponse.json({ reply, conversationId: validConversationId });
+        return NextResponse.json({
+          reply,
+          conversationId: validConversationId,
+          conversationToken: responseConversationToken,
+        });
       }
 
       // Trava de idempotência: verifica se já gerou proposta para esta conversa nos últimos 2 minutos
@@ -149,7 +176,11 @@ export async function POST(req: Request) {
         });
         if (recentProposal) {
           const reply = `Sua proposta (${recentProposal.proposalNumber || "WBS"}) já foi enviada para seu e-mail: ${userEmail}. Por favor, verifique sua caixa de entrada e spam!`;
-          return NextResponse.json({ reply, conversationId: validConversationId });
+          return NextResponse.json({
+            reply,
+            conversationId: validConversationId,
+            conversationToken: responseConversationToken,
+          });
         }
       }
 
@@ -228,7 +259,7 @@ Formato profissional, claro e persuasivo.
         await sendProposalEmail(userEmail, proposalContent);
         emailSent = true;
       } catch (err) {
-        console.error("Erro ao enviar email da proposta:", err);
+        logger.error("Erro ao enviar email da proposta:", "ChatAPI", { error: String(err) });
       }
 
       const reply = emailSent
@@ -238,10 +269,14 @@ Formato profissional, claro e persuasivo.
       if (validConversationId) {
         await prisma.message.create({
           data: { conversationId: validConversationId, role: "assistant", text: reply },
-        }).catch((err: unknown) => console.error("Erro ao salvar resposta da proposta:", err));
+        }).catch((err: unknown) => logger.error("Erro ao salvar resposta da proposta:", "ChatAPI", { error: String(err) }));
       }
 
-      return NextResponse.json({ reply, conversationId: validConversationId });
+      return NextResponse.json({
+        reply,
+        conversationId: validConversationId,
+        conversationToken: responseConversationToken,
+      });
     }
 
     // 🤖 RESPOSTA NORMAL
@@ -327,13 +362,17 @@ MENSAGENS FORA DE CONTEXTO (SPAM / SEGURANÇA):
     if (validConversationId) {
       await prisma.message.create({
         data: { conversationId: validConversationId, role: "assistant", text: reply },
-      }).catch((err: unknown) => console.error("Erro ao salvar resposta da IA:", err));
+      }).catch((err: unknown) => logger.error("Erro ao salvar resposta da IA:", "ChatAPI", { error: String(err) }));
     }
 
-    return NextResponse.json({ reply, conversationId: validConversationId });
+    return NextResponse.json({
+      reply,
+      conversationId: validConversationId,
+      conversationToken: responseConversationToken,
+    });
 
   } catch (error) {
-    console.error(error);
+    logger.error("Erro crítico no handler POST /api/chat:", "ChatAPI", { error: String(error) });
     return NextResponse.json(
       { reply: "Erro ao gerar resposta." },
       { status: 500 }
