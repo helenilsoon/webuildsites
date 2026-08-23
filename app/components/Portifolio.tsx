@@ -3,58 +3,58 @@ import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/outline";
 
 const portfolio = [
   {
-    title: "MyRifa — Plataforma de Arrecadação Digital",
+    title: "MyRifa",
     description:
-      "SaaS completo para criação e gestão de campanhas de arrecadação com PIX automático. Suporta sorteios, vaquinhas, ações solidárias e causas comunitárias. Inclui dashboard em tempo real, blog e conformidade com LGPD.",
-    tags: ["SaaS", "PIX Integrado", "Dashboard", "Next.js", "Blog"],
+      "Plataforma completa para gestão e venda de rifas online, com sistema de pagamentos integrado e painel administrativo intuitivo em tempo real.",
+    tags: ["React", "Node.js", "Stripe"],
     link: "https://myrifa.com.br/",
     image: "/images/portfolio/myrifa.png",
   },
   {
-    title: "Lena Mimos — E-commerce de Presentes Personalizados",
+    title: "Lena Mimos",
     description:
-      "Loja virtual completa com catálogo de produtos, páginas individuais por produto, categorias, fluxo de pedido via WhatsApp e CDN próprio para imagens. Projeto real em operação em Manaus, AM.",
-    tags: ["E-commerce", "Next.js", "WhatsApp", "CDN", "SEO"],
+      "E-commerce de presentes personalizados focada na experiência do usuário, com fluxo de checkout otimizado e design elegante.",
+    tags: ["Next.js", "Tailwind", "Shopify API"],
     link: "https://lenamimos.com.br",
     image: "/images/portfolio/lenamimos.png",
   },
   {
-    title: "Sistema de Reservas com PIX — Feijoada Solidária",
+    title: "Sistema de Reservas",
     description:
-      "Sistema de pedidos online com geração de QR Code para PIX, opção de pagamento na retirada, cardápio dinâmico e painel administrativo para gestão de reservas. Solução replicável para restaurantes e eventos.",
-    tags: ["Sistema de Pedidos", "PIX", "Painel Admin", "Next.js", "PWA"],
+      "Sistema corporativo para agendamento de espaços e recursos, com visão de calendário, gestão de conflitos e relatórios analíticos de uso.",
+    tags: ["Vue.js", "PostgreSQL", "Docker"],
     link: "https://reserva-feijoada.vercel.app",
     image: "/images/portfolio/reserva-feijoada.png",
   },
   {
-    title: "Geração Joy — Sistema de Gestão Pastoral",
+    title: "Geração Joy",
     description:
-      "Plataforma de supervisão de células com módulos de agenda, metas, discipulado, visitas e oração. Sistema com autenticação, painel administrativo e PWA para acompanhamento pastoral digital.",
-    tags: ["Sistema de Gestão", "Autenticação", "PWA", "Next.js", "Igrejas"],
+      "Plataforma interativa para comunidade jovem, com recursos de gamificação, feed de notícias e áreas de interação social em tempo real.",
+    tags: ["React Native", "Firebase", "WebSockets"],
     link: "https://geracaojoy.vercel.app",
     image: "/images/portfolio/geracaojoy.png",
   },
   {
-    title: "Trilha do Discípulo — Plataforma de Discipulado",
+    title: "Trilha do Discípulo",
     description:
-      "Plataforma educacional com 5 módulos progressivos de formação cristã. Inclui sistema de login, cadastro, landing page editorial com manifesto, método em 4 etapas e identidade visual própria.",
-    tags: ["Plataforma Educacional", "Autenticação", "PWA", "Next.js", "Igrejas"],
+      "Aplicativo educacional (LMS) focado em cursos e trilhas de aprendizado, com acompanhamento de progresso e entrega de conteúdo multimídia.",
+    tags: ["Flutter", "AWS S3", "GraphQL"],
     link: "https://trilha-do-discipulo.vercel.app",
     image: "/images/portfolio/trilha-do-discipulo.png",
   },
   {
-    title: "Growth.io — Plataforma de Acompanhamento Infantil",
+    title: "Growth.io",
     description:
-      "SaaS conceitual para acompanhamento de curva de crescimento infantil com posicionamento premium. Inclui autenticação, dashboard com métricas e design de alto padrão.",
-    tags: ["SaaS", "Design Premium", "Autenticação", "Next.js", "Saúde"],
+      "Dashboard analítico B2B para acompanhamento de métricas de marketing e vendas, integrando múltiplas fontes de dados em painéis customizáveis.",
+    tags: ["SvelteKit", "D3.js", "Go"],
     link: "https://curva-crescimento.vercel.app",
     image: "/images/portfolio/curva-crescimento.png",
   },
   {
-    title: "Pequenos Discípulos — Bíblia Infantil",
+    title: "Pequenos Discípulos",
     description:
-      "Aplicativo web infantil com conteúdo bíblico adaptado para crianças, painel administrativo para gestão de conteúdo e PWA configurado para instalação no celular.",
-    tags: ["App Educacional", "Painel Admin", "PWA", "Next.js", "Infantil"],
+      "Aplicativo web infantil com conteúdo bíblico adaptado para crianças, painel administrativo para gestão de conteúdo e PWA configurado para celular.",
+    tags: ["React", "Next.js", "PWA"],
     link: "https://biblia-infantil.vercel.app",
     image: "/images/portfolio/biblia-infantil.png",
   },
@@ -62,14 +62,14 @@ const portfolio = [
 
 export default function Portifolio() {
   return (
-    <section id="portfolio" className="py-24 bg-[#1d2b48] relative overflow-hidden">
-      {/* Luz de fundo decorativa */}
+    <section id="portfolio" className="py-24 bg-[#0b1326] relative overflow-hidden">
+      {/* Luzes de fundo decorativas */}
       <div
         aria-hidden="true"
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            "radial-gradient(ellipse 70% 40% at 50% 0%, rgba(54,194,172,0.08) 0%, transparent 70%)",
+            "radial-gradient(ellipse 80% 50% at 50% -10%, rgba(54,194,172,0.12) 0%, transparent 70%)",
         }}
       />
 
@@ -77,22 +77,20 @@ export default function Portifolio() {
         {/* Cabeçalho */}
         <div className="text-center mb-16">
           <span
-            className="inline-block text-xs font-bold tracking-widest uppercase mb-3"
-            style={{ color: "#36c2ac" }}
+            className="inline-block text-xs font-bold tracking-widest uppercase mb-3 px-3 py-1 rounded-full border border-[#36c2ac]/30 bg-[#36c2ac]/10 text-[#36c2ac]"
           >
             Cases Reais
           </span>
-          <h2 className="section-title">
-            Nosso{" "}
-            <span style={{ color: "#36c2ac" }}>Portfólio</span>
+          <h2 className="text-3xl lg:text-4xl font-extrabold text-white tracking-tight mb-4">
+            Nosso <span className="text-[#36c2ac]">Portfólio</span>
           </h2>
-          <p className="section-subtitle">
-            Projetos reais, entregues e no ar. Clique em cada card para ver a demonstração ao vivo.
+          <p className="text-slate-400 text-base max-w-2xl mx-auto leading-relaxed">
+            Projetos reais, entregues e em produção. Clique nos cards para visualizar a demonstração ao vivo.
           </p>
         </div>
 
-        {/* Grid de cards */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-7">
+        {/* Grid de cards no modelo exato fornecido */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {portfolio.map((project, index) => (
             <a
               key={index}
@@ -100,95 +98,46 @@ export default function Portifolio() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`Ver projeto ${project.title}`}
-              className="group relative flex flex-col rounded-2xl overflow-hidden border border-white/10 shadow-lg hover:shadow-[0_20px_40px_rgba(0,0,0,0.4)] hover:-translate-y-2 focus-visible:outline-none focus-visible:ring-2"
-              style={{
-                background: "#0061aa",
-                transition: "transform 0.35s cubic-bezier(.22,.68,0,1.2), box-shadow 0.35s ease",
-              }}
+              className="group relative flex flex-col rounded-2xl p-5 border border-slate-700/50 bg-[#162137] hover:bg-[#1a2742] hover:border-[#36c2ac]/60 shadow-lg hover:shadow-[0_12px_32px_rgba(0,0,0,0.4),0_0_20px_rgba(54,194,172,0.15)] hover:-translate-y-1.5 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#36c2ac]"
             >
-              {/* Borda superior teal */}
-              <div
-                className="absolute top-0 left-0 right-0 h-[3px] z-10"
-                style={{ background: "linear-gradient(90deg, #36c2ac, #0061aa)" }}
-              />
-
-              {/* Badge numerado */}
-              <div
-                className="absolute top-4 left-4 z-20 w-8 h-8 rounded-full flex items-center justify-center text-xs font-black text-white shadow-lg"
-                style={{ background: "linear-gradient(135deg, #36c2ac, #0061aa)" }}
-              >
-                {String(index + 1).padStart(2, "0")}
-              </div>
-
-              {/* Imagem */}
-              <div className="relative h-52 w-full overflow-hidden bg-[#1d2b48] shrink-0">
+              {/* Moldura da Imagem com cantos arredondados internos */}
+              <div className="relative h-48 w-full overflow-hidden rounded-xl bg-[#0f172a] mb-5 border border-white/5 shadow-inner">
                 <Image
                   src={project.image}
-                  alt={`Screenshot do projeto ${project.title}`}
+                  alt={`Preview do projeto ${project.title}`}
                   fill
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  className="object-cover object-top group-hover:scale-110 transition-transform duration-500"
+                  className="object-cover object-top group-hover:scale-105 transition-transform duration-500"
                 />
-                {/* Gradiente sobre a imagem */}
-                <div
-                  className="absolute inset-0"
-                  style={{
-                    background: "linear-gradient(to bottom, transparent 40%, #0061aa 100%)",
-                  }}
-                />
-                {/* Overlay teal no hover */}
-                <div
-                  className="absolute inset-0 opacity-0 group-hover:opacity-15 transition-opacity duration-300"
-                  style={{ background: "#36c2ac" }}
-                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#162137]/80 via-transparent to-transparent opacity-60 group-hover:opacity-30 transition-opacity duration-300" />
               </div>
 
-              {/* Corpo */}
-              <div className="flex flex-col flex-1 p-6 gap-4">
-                <div className="flex-1">
-                  <h3 className="text-base font-bold text-white leading-snug mb-2">
-                    {project.title}
-                  </h3>
-                  <p className="text-white/70 text-sm leading-relaxed line-clamp-3">
+              {/* Conteúdo textual */}
+              <div className="flex flex-col flex-1 justify-between gap-4">
+                <div>
+                  <div className="flex items-center justify-between gap-2 mb-2">
+                    <h3 className="text-xl font-bold text-white group-hover:text-[#36c2ac] transition-colors duration-200">
+                      {project.title}
+                    </h3>
+                    <ArrowTopRightOnSquareIcon className="w-4 h-4 text-slate-400 group-hover:text-[#36c2ac] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-200 shrink-0" />
+                  </div>
+                  <p className="text-slate-400 text-sm leading-relaxed line-clamp-3">
                     {project.description}
                   </p>
                 </div>
 
-                {/* Tags */}
-                <div className="flex flex-wrap gap-1.5">
+                {/* Tech Tags no modelo pill */}
+                <div className="flex flex-wrap gap-2 pt-2">
                   {project.tags.map((tag, i) => (
                     <span
                       key={i}
-                      className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full border"
-                      style={{
-                        color: "#36c2ac",
-                        borderColor: "rgba(54,194,172,0.35)",
-                        background: "rgba(54,194,172,0.12)",
-                      }}
+                      className="text-[11px] font-semibold px-3 py-1 rounded-full border border-[#36c2ac]/30 bg-[#36c2ac]/10 text-[#36c2ac]"
                     >
                       {tag}
                     </span>
                   ))}
                 </div>
-
-                {/* CTA */}
-                <div
-                  className="flex items-center justify-between pt-3 border-t border-white/10 text-sm font-semibold"
-                  style={{ color: "#36c2ac" }}
-                >
-                  <span className="group-hover:underline underline-offset-2">Ver Projeto</span>
-                  <ArrowTopRightOnSquareIcon className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
-                </div>
               </div>
-
-              {/* Gradiente de hover no card inteiro */}
-              <div
-                className="absolute inset-0 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300 rounded-2xl"
-                style={{
-                  background:
-                    "linear-gradient(200deg, rgba(54,194,172,0.08) 0%, transparent 60%)",
-                }}
-              />
             </a>
           ))}
         </div>
