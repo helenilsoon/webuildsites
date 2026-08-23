@@ -11,25 +11,25 @@ import Footer from '../components/Footer';
 import WhatsAppCTA from '../components/WhatsAppCTA';
 
 export const metadata: Metadata = {
-  title: 'Sistema de Pedidos para Restaurante e Cardápio com PIX | WeBuildSites',
+  title: 'Plataforma de Arrecadação e Sistema de Rifa Online com PIX | WeBuildSites',
   description:
-    'Desenvolvemos sistemas de pedidos online para restaurantes com cardápio digital, PIX integrado e painel administrativo. Case real: Feijoada Solidária. Atendemos todo o Brasil.',
+    'Sistemas para rifas, vaquinhas e campanhas de arrecadação digital com PIX automático, dashboard em tempo real e LGPD. Case real: MyRifa.',
   alternates: {
-    canonical: 'https://webuildsites.com.br/sistema-para-restaurantes',
+    canonical: 'https://webuildsites.com.br/plataforma-de-arrecadacao',
   },
   keywords: [
-    'sistema de pedidos para restaurante',
-    'cardápio online com PIX',
-    'sistema de reservas restaurante Manaus',
-    'pedido online sem iFood',
-    'sistema de reservas para restaurante',
-    'cardápio digital QR code',
+    'plataforma de arrecadação com PIX',
+    'sistema de rifa online',
+    'vaquinha online',
+    'arrecadação digital',
+    'plataforma de arrecadação online',
+    'sistema para rifas e sorteios',
   ],
   openGraph: {
-    title: 'Sistema de Pedidos para Restaurante e Cardápio com PIX',
+    title: 'Plataforma de Arrecadação e Sistema de Rifa com PIX',
     description:
-      'Desenvolvemos sistemas de pedidos online para restaurantes com cardápio digital, PIX integrado e painel administrativo.',
-    url: 'https://webuildsites.com.br/sistema-para-restaurantes',
+      'Desenvolvemos sistemas SaaS para gestão de campanhas de arrecadação, sorteios e vaquinhas online com recebimento automático via PIX.',
+    url: 'https://webuildsites.com.br/plataforma-de-arrecadacao',
     siteName: 'WeBuildSites',
     locale: 'pt_BR',
     type: 'website',
@@ -38,74 +38,70 @@ export const metadata: Metadata = {
 
 const problemas = [
   {
-    titulo: 'Comissões altas em aplicativos de delivery',
-    desc: 'Pagando até 27% por pedido para plataformas terceiras, a margem de lucro do seu restaurante desaparece. Você trabalha para o aplicativo.',
+    titulo: 'Recebimento de valores sem controle',
+    desc: 'Sem um sistema de PIX automático, você precisa conferir cada comprovante manualmente no WhatsApp, o que leva a fraudes e falhas.',
   },
   {
-    titulo: 'Pedidos desorganizados no WhatsApp',
-    desc: 'Receber pedidos por mensagem de texto gera erros, demora no atendimento e clientes insatisfeitos por ficarem esperando resposta.',
+    titulo: 'Baixa credibilidade na campanha',
+    desc: 'Campanhas feitas apenas via redes sociais, sem uma página oficial, geram desconfiança e reduzem drasticamente a conversão de doadores ou compradores.',
   },
   {
-    titulo: 'Falta de controle e gestão de pagamentos',
-    desc: 'Conferir comprovantes falsos de PIX no WhatsApp ou lidar com troco errado na entrega atrasa a operação e gera prejuízos.',
+    titulo: 'Falta de transparência e prestação de contas',
+    desc: 'Não há um painel público para mostrar o andamento da arrecadação, o que dificulta o engajamento de novas pessoas com a causa.',
   },
   {
-    titulo: 'Cardápios em PDF desatualizados',
-    desc: 'Enviar um PDF que precisa ser refeito toda vez que um preço muda ou um item acaba gera frustração para o cliente e trabalho dobrado para você.',
+    titulo: 'Riscos jurídicos e LGPD',
+    desc: 'Coletar e expor dados de doadores sem as devidas políticas de privacidade pode gerar problemas legais graves para os organizadores.',
   },
   {
-    titulo: 'Dependência de terceiros para alterações',
-    desc: 'Precisar ligar para o suporte de uma plataforma genérica só para mudar o horário de funcionamento ou adicionar um novo prato.',
+    titulo: 'Dificuldade em gerenciar números e bilhetes',
+    desc: 'Em sorteios e rifas, controlar quais números já foram vendidos e quais estão livres por meio de planilhas resulta em números duplicados e confusão.',
   },
 ];
 
 const entregamos = [
   {
-    titulo: 'Cardápio dinâmico online',
-    desc: 'Seus clientes acessam o cardápio pelo navegador, sem precisar baixar aplicativos. Tudo rápido, responsivo e atualizado na hora.',
+    titulo: 'PIX Automático Integrado',
+    desc: 'A baixa de pagamentos é instantânea. O sistema identifica o recebimento via API e atualiza o status do bilhete ou doação sem ação humana.',
   },
   {
-    titulo: 'Sistema de pedidos integrado',
-    desc: 'O cliente escolhe os itens, adiciona observações e fecha o pedido sozinho, enviando as informações direto para o seu painel ou WhatsApp.',
+    titulo: 'Dashboard em Tempo Real',
+    desc: 'Painel completo para o administrador acompanhar o volume de arrecadação, bilhetes vendidos e metas batidas a cada minuto.',
   },
   {
-    titulo: 'QR Code PIX com confirmação rápida',
-    desc: 'Geração automática de QR Code e chave "Copia e Cola" no fechamento do pedido, facilitando o pagamento antecipado e seguro.',
+    titulo: 'Controle inteligente de números e cotas',
+    desc: 'Reserva temporária de bilhetes. Se o PIX não for pago dentro do limite de tempo, o número volta automaticamente para venda.',
   },
   {
-    titulo: 'Opções flexíveis de entrega e retirada',
-    desc: 'Configuração para retirada no balcão, consumo no local ou delivery, com cálculo de taxa de entrega se necessário.',
+    titulo: 'Conformidade com a LGPD',
+    desc: 'Termos de uso, políticas de privacidade e gestão de consentimento integrados, garantindo a proteção dos dados dos participantes.',
   },
   {
-    titulo: 'Painel administrativo para gestão',
-    desc: 'Você mesmo edita os preços, ativa ou desativa pratos, gerencia os pedidos recebidos e altera configurações sem depender de ninguém.',
+    titulo: 'Blog e Área de Notícias',
+    desc: 'Espaço integrado para publicar novidades, transparência das ações sociais e os resultados dos sorteios, gerando SEO e autoridade.',
   },
   {
-    titulo: 'PWA — App instalável no celular',
-    desc: 'O cliente pode salvar o seu sistema na tela inicial do celular como um app, facilitando pedidos recorrentes e fidelizando o público.',
-  },
-  {
-    titulo: 'Zero comissão por venda',
-    desc: 'O sistema é seu. O dinheiro cai direto na sua conta e você não divide o lucro com nenhuma plataforma terceirizada.',
+    titulo: 'Experiência de alta conversão',
+    desc: 'Interface fluida, carregamento rápido e design voltado para o fechamento da doação ou compra no celular em poucos cliques.',
   },
 ];
 
 const funcionalidades = [
-  'Cardápio digital responsivo com categorias e fotos',
-  'Carrinho de compras com cálculo de total',
-  'Geração de QR Code PIX dinâmico',
-  'Opção de pagamento na retirada ou na entrega',
-  'Painel administrativo para gestão do cardápio',
-  'Controle de status do pedido (novo, preparando, entregue)',
-  'Gestão de reservas de mesas e horários',
-  'Notificações de novos pedidos',
-  'Instalação como PWA (App sem loja de aplicativos)',
-  'Integração de pedidos formatados via WhatsApp',
-  'Configuração de horários de funcionamento e pausas',
-  'Relatórios de vendas e itens mais pedidos',
+  'Geração automática de QR Code PIX e chave Pix Copia e Cola',
+  'Baixa automática de pagamentos confirmados via webhook',
+  'Gestão e liberação automática de números reservados não pagos',
+  'Painel administrativo (Dashboard) com métricas financeiras',
+  'Exportação de dados de participantes e doadores',
+  'Configuração de metas e barra de progresso pública',
+  'Criação de múltiplas campanhas ativas simultaneamente',
+  'Integração com políticas de LGPD e Aceite de Termos',
+  'Módulo de Blog integrado para notícias e resultados',
+  'Disparo de comprovantes de participação',
+  'Painel de suporte para gestão de estornos ou dúvidas',
+  'Otimização avançada de SEO para a landing page da campanha',
 ];
 
-export default function RestaurantesPage() {
+export default function ArrecadacaoPage() {
   return (
     <>
       <Header />
@@ -123,24 +119,24 @@ export default function RestaurantesPage() {
           <div className="container mx-auto px-6 lg:px-8 relative z-10">
             <div className="max-w-4xl mx-auto text-center">
               <span className="inline-block text-xs font-bold tracking-widest uppercase mb-5 px-3.5 py-1.5 rounded-full border border-[#61ce70]/30 bg-[#61ce70]/10 text-[#61ce70]">
-                Case real entregue — Feijoada Solidária
+                Case real entregue — MyRifa SaaS
               </span>
 
               {/* H1 otimizado para SEO */}
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-6">
-                Sistema de pedidos para restaurante e{' '}
-                <span className="text-[#61ce70]">cardápio online com PIX</span>
+                Plataforma de arrecadação online e{' '}
+                <span className="text-[#61ce70]">sistema de rifa com PIX</span>
               </h1>
 
               <p className="text-lg md:text-xl text-white/90 mb-10 max-w-3xl mx-auto leading-relaxed">
-                Desenvolvemos plataformas próprias de delivery e reservas para restaurantes que querem lucrar mais. Receba pedidos direto no seu sistema, com pagamento via PIX, e sem pagar comissões para aplicativos terceiros.
+                Desenvolvemos sistemas sob medida para gestão de vaquinhas, campanhas solidárias e sorteios digitais. Tenha sua própria plataforma com baixa automática de PIX e dashboard financeiro em tempo real.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <WhatsAppCTA
-                  message="Olá! Quero um orçamento de um sistema de pedidos para o meu restaurante."
+                  message="Olá! Tenho interesse em desenvolver um sistema de arrecadação digital e gostaria de mais informações."
                   className="btn-primary inline-flex items-center justify-center gap-2 cursor-pointer"
-                  ariaLabel="Falar no WhatsApp sobre sistema para restaurantes"
+                  ariaLabel="Falar no WhatsApp sobre sistema de arrecadação"
                 >
                   <ChatBubbleLeftRightIcon className="w-5 h-5" />
                   Falar no WhatsApp
@@ -163,11 +159,11 @@ export default function RestaurantesPage() {
 
               {/* H2 */}
               <h2 className="text-3xl md:text-4xl font-extrabold text-white text-center mb-4">
-                O que acontece quando seu restaurante{' '}
-                <span className="text-[#61ce70]">não tem um sistema próprio</span>
+                Por que organizar campanhas manuais é{' '}
+                <span className="text-[#61ce70]">um risco para o projeto?</span>
               </h2>
               <p className="text-white/75 text-center text-base md:text-lg mb-12 max-w-2xl mx-auto leading-relaxed">
-                Depender exclusivamente de grandes plataformas de delivery corrói sua margem de lucro. Tentar gerenciar tudo apenas pelo WhatsApp manual gera erros e lentidão no atendimento.
+                Quando a campanha cresce, o controle no papel e no WhatsApp se torna impossível. E se você depende de plataformas genéricas terceirizadas, perde dinheiro em taxas abusivas e atrasos de saque.
               </p>
 
               <div className="grid md:grid-cols-2 gap-6">
@@ -190,7 +186,7 @@ export default function RestaurantesPage() {
           </div>
         </section>
 
-        {/* ── CASE REAL: FEIJOADA SOLIDÁRIA ── */}
+        {/* ── CASE REAL: MYRIFA ── */}
         <section className="py-20 bg-[#1d2b48] border-y border-white/10">
           <div className="container mx-auto px-6 lg:px-8">
             <div className="max-w-5xl mx-auto">
@@ -204,20 +200,20 @@ export default function RestaurantesPage() {
 
                   {/* H2 */}
                   <h2 className="text-2xl md:text-3xl font-extrabold text-white mb-4 leading-snug">
-                    Reserva Feijoada Solidária — Sistema de pedidos e reservas
+                    MyRifa — Plataforma SaaS de Campanhas e Sorteios
                   </h2>
 
                   <p className="text-white/80 text-sm md:text-base leading-relaxed mb-6">
-                    A Feijoada Solidária é um sistema desenvolvido pela WeBuildSites para gerenciar as vendas e reservas de um evento gastronômico. A plataforma centraliza os pedidos online, gera o QR Code PIX para pagamento imediato e oferece um painel para a gestão das entregas e retiradas no local.
+                    A MyRifa é uma solução SaaS projetada e desenvolvida pela WeBuildSites para gerenciar múltiplas campanhas simultaneamente. O sistema controla a venda de números de sorteios com integração direta via PIX automático, liberando os bilhetes sem intervenção humana após o pagamento.
                   </p>
 
                   <ul className="space-y-3 mb-8">
                     {[
-                      'Sistema de pedidos online com carrinho de compras',
-                      'Geração de QR Code PIX e chave "Copia e Cola"',
-                      'Opções de entrega, retirada e consumo no local',
-                      'Painel administrativo para gestão do cardápio e reservas',
-                      'Desenvolvido em Next.js com PWA para uso no celular',
+                      'Sistema Multi-campanhas para várias ações simultâneas',
+                      'Baixa e conciliação bancária via PIX Webhook',
+                      'Dashboard financeiro administrativo completo',
+                      'Adequação total às normativas de LGPD',
+                      'Blog institucional integrado com CMS próprio',
                     ].map((item, i) => (
                       <li key={i} className="flex items-start gap-3 text-sm text-white/85">
                         <CheckCircleIcon className="w-5 h-5 text-[#61ce70] flex-shrink-0 mt-0.5" />
@@ -227,14 +223,14 @@ export default function RestaurantesPage() {
                   </ul>
 
                   <a
-                    href="https://reserva-feijoada.vercel.app"
+                    href="https://myrifa.com.br"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 text-[#61ce70] text-sm font-semibold hover:underline"
-                    aria-label="Acessar a demonstração da Feijoada Solidária"
+                    aria-label="Acessar o case MyRifa"
                   >
                     <ArrowTopRightOnSquareIcon className="w-4 h-4" />
-                    Acessar a demonstração — reserva-feijoada.vercel.app
+                    Conhecer o projeto — myrifa.com.br
                   </a>
                 </div>
 
@@ -242,18 +238,18 @@ export default function RestaurantesPage() {
                 <div className="lg:w-1/2 w-full">
                   <div className="rounded-2xl bg-gradient-to-br from-[#0061aa] to-[#1d2b48] border border-[#61ce70]/30 p-8 shadow-xl">
                     <div className="text-center mb-6">
-                      <span className="text-4xl">🍲</span>
-                      <h3 className="text-white font-bold text-xl mt-3 mb-1">Reserva Feijoada</h3>
-                      <p className="text-[#61ce70] text-sm font-semibold">Pedidos e Reservas Online</p>
+                      <span className="text-4xl">🎟️</span>
+                      <h3 className="text-white font-bold text-xl mt-3 mb-1">MyRifa SaaS</h3>
+                      <p className="text-[#61ce70] text-sm font-semibold">Sistema de Arrecadação Digital</p>
                     </div>
                     <div className="space-y-3">
                       {[
-                        'Menu digital responsivo',
-                        'Gestão de estoque (quantidade disponível)',
-                        'Fechamento de pedido otimizado',
-                        'Pagamento direto na conta via PIX',
-                        'Dashboard de acompanhamento',
-                        'Atualização de status do pedido',
+                        'Criação de campanhas ilimitadas',
+                        'Módulo de sorteio de bilhetes',
+                        'Checkout rápido mobile-first',
+                        'Gerenciamento de estornos e fraudes',
+                        'Exportação de dados de participantes',
+                        'Proteção contra sobrecarga (High Traffic)',
                       ].map((item, i) => (
                         <div key={i} className="flex items-center gap-3 text-sm text-white/90">
                           <div className="w-5 h-5 rounded-full bg-[#61ce70]/20 flex items-center justify-center flex-shrink-0">
@@ -264,7 +260,7 @@ export default function RestaurantesPage() {
                       ))}
                     </div>
                     <div className="mt-6 flex flex-wrap gap-2">
-                      {['Next.js', 'PWA', 'Painel Admin', 'API PIX', 'Banco de Dados'].map((tag) => (
+                      {['Next.js SaaS', 'PIX API', 'Webhooks', 'Dashboard', 'LGPD'].map((tag) => (
                         <span
                           key={tag}
                           className="text-xs bg-[#61ce70]/15 text-[#61ce70] border border-[#61ce70]/30 px-3 py-1 rounded-full"
@@ -288,11 +284,11 @@ export default function RestaurantesPage() {
 
               {/* H2 */}
               <h2 className="text-3xl md:text-4xl font-extrabold text-white text-center mb-4">
-                O que a WeBuildSites entrega no{' '}
-                <span className="text-[#61ce70]">sistema de pedidos</span>
+                O que a WeBuildSites constrói para sua{' '}
+                <span className="text-[#61ce70]">plataforma de campanhas</span>
               </h2>
               <p className="text-white/80 text-center text-base mb-12 max-w-2xl mx-auto leading-relaxed">
-                Você recebe uma plataforma completa, pronta para uso. Sem mensalidades abusivas e sem comissões por venda. O sistema é desenvolvido para ser rápido e fácil para o seu cliente pedir.
+                Desenvolvemos a sua estrutura própria de recebimento, livre de taxas das grandes plataformas de vaquinha online e pronta para processar centenas de pagamentos simultâneos.
               </p>
 
               <div className="grid md:grid-cols-2 gap-6">
@@ -322,11 +318,11 @@ export default function RestaurantesPage() {
 
               {/* H2 */}
               <h2 className="text-3xl md:text-4xl font-extrabold text-white text-center mb-4">
-                Funcionalidades que podem ser{' '}
-                <span className="text-[#61ce70]">desenvolvidas para o seu restaurante</span>
+                Módulos e funcionalidades para{' '}
+                <span className="text-[#61ce70]">sistemas de arrecadação</span>
               </h2>
               <p className="text-white/75 text-center text-sm md:text-base mb-12 max-w-2xl mx-auto">
-                Adaptamos o sistema para o fluxo do seu negócio, seja um delivery focado em agilidade, um restaurante com reservas de mesas, ou eventos gastronômicos.
+                Toda campanha é única. Seu sistema pode ter as funcionalidades abaixo dependendo do seu modelo: rifa de produtos, sorteio beneficente, doação por cotas ou vaquinha tradicional.
               </p>
 
               <div className="grid sm:grid-cols-2 gap-4">
@@ -351,18 +347,18 @@ export default function RestaurantesPage() {
 
               {/* H2 */}
               <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-5">
-                Pare de perder dinheiro e controle do{' '}
-                <span className="text-[#61ce70]">seu delivery</span>
+                Desenvolva a tecnologia para{' '}
+                <span className="text-[#61ce70]">o seu próximo projeto de sucesso</span>
               </h2>
               <p className="text-white/80 text-base mb-8 max-w-xl mx-auto leading-relaxed">
-                Fale com quem já desenvolveu sistemas reais de pedidos e reservas. Vamos montar uma proposta focada em aumentar suas vendas diretas, sem pagar comissões para terceiros.
+                Converse com a nossa equipe para entendermos o escopo da sua plataforma de arrecadação ou sorteio digital, os gateways de pagamento e a estrutura técnica necessária.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <WhatsAppCTA
-                  message="Olá! Quero entender como funciona para ter um sistema de pedidos próprio para o meu restaurante."
+                  message="Olá! Vim através da página de Sistema de Arrecadação. Gostaria de solicitar um orçamento para desenvolvimento de uma plataforma própria."
                   className="btn-primary inline-flex items-center justify-center gap-2 cursor-pointer"
-                  ariaLabel="Falar no WhatsApp sobre sistema de delivery próprio"
+                  ariaLabel="Falar no WhatsApp sobre projeto de plataforma de arrecadação"
                 >
                   <ChatBubbleLeftRightIcon className="w-5 h-5" />
                   Falar no WhatsApp Comercial
@@ -376,7 +372,7 @@ export default function RestaurantesPage() {
               </div>
 
               <p className="text-white/50 text-xs mt-6">
-                Atendemos restaurantes, lanchonetes e negócios de alimentação em todo o Brasil.
+                Desenvolvemos plataformas escaláveis para todo o Brasil, a partir de Manaus (AM).
               </p>
             </div>
           </div>
@@ -392,34 +388,34 @@ export default function RestaurantesPage() {
               mainEntity: [
                 {
                   '@type': 'Question',
-                  name: 'O que é um sistema de pedidos próprio para restaurante?',
+                  name: 'O que é uma plataforma de arrecadação online própria?',
                   acceptedAnswer: {
                     '@type': 'Answer',
-                    text: 'É uma plataforma desenvolvida exclusivamente para o seu restaurante, onde os clientes acessam o cardápio digital, fazem o pedido e pagam (via PIX, por exemplo) sem que você pague comissões a aplicativos de delivery de terceiros.',
+                    text: 'É um sistema de doações, rifas ou vaquinhas onde o dinheiro recebido vai diretamente para a conta da sua empresa via PIX, eliminando a dependência e as taxas de grandes sites de terceiros.',
                   },
                 },
                 {
                   '@type': 'Question',
-                  name: 'Como recebo os pagamentos no sistema?',
+                  name: 'Como funciona a baixa automática de PIX?',
                   acceptedAnswer: {
                     '@type': 'Answer',
-                    text: 'Integramos a geração automática de QR Code PIX no fechamento do pedido. O dinheiro cai diretamente na sua conta bancária e o sistema pode notificar quando o pagamento for confirmado.',
+                    text: 'Integramos o sistema com o seu banco ou gateway de pagamentos via API. Quando o doador paga o PIX, a API notifica nosso sistema, que aprova a transação em tempo real, sem intervenção humana.',
                   },
                 },
                 {
                   '@type': 'Question',
-                  name: 'Eu mesmo posso alterar os preços do cardápio?',
+                  name: 'O sistema lida com reserva de números em rifas?',
                   acceptedAnswer: {
                     '@type': 'Answer',
-                    text: 'Sim. Entregamos um painel administrativo onde você pode cadastrar novos produtos, alterar preços, adicionar fotos e pausar a venda de itens que acabaram, tudo em tempo real.',
+                    text: 'Sim. O participante escolhe os números e tem um prazo (ex: 15 minutos) para pagar o PIX. Se não pagar, o sistema libera os números automaticamente de volta para a venda.',
                   },
                 },
                 {
                   '@type': 'Question',
-                  name: 'Vocês têm algum exemplo de sistema que já fizeram?',
+                  name: 'Qual sistema de arrecadação vocês já desenvolveram?',
                   acceptedAnswer: {
                     '@type': 'Answer',
-                    text: 'Sim, desenvolvemos a plataforma da Feijoada Solidária, um sistema completo de gestão de reservas e pedidos online com PIX integrado. Acesse a demonstração em reserva-feijoada.vercel.app.',
+                    text: 'A WeBuildSites desenvolveu a MyRifa, um SaaS de campanhas e sorteios com integração direta PIX, dashboard financeiro em tempo real e foco na adequação à LGPD. Pode ser acessada em myrifa.com.br.',
                   },
                 },
               ],
