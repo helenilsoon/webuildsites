@@ -1,11 +1,16 @@
+'use client';
+
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
+import { useScrollAnimation } from "../hooks/useScrollAnimation";
 
 export default function Testimonials() {
+  const { ref, isVisible } = useScrollAnimation({ threshold: 0.2 });
+
   return (
     <section id="depoimentos" className="py-20 bg-[#0061aa]">
       <div className="container mx-auto px-6 lg:px-8">
-        <div className="max-w-2xl mx-auto text-center">
+        <div ref={ref} className={`max-w-2xl mx-auto text-center anim-scale-up ${isVisible ? 'visible' : ''}`}>
           <h2 className="section-title">
             Primeiros projetos entregues.{" "}
             <span className="text-[#61ce70]">Cases em construção.</span>
@@ -16,7 +21,7 @@ export default function Testimonials() {
           </p>
           <Link
             href="#portfolio"
-            className="btn-primary inline-flex items-center gap-2"
+            className={`btn-primary btn-glow inline-flex items-center gap-2 anim-fade-up anim-delay-2 ${isVisible ? 'visible' : ''}`}
             aria-label="Ver portfólio de projetos entregues"
           >
             Ver Portfólio

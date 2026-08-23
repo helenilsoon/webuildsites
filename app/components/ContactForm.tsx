@@ -1,6 +1,7 @@
 'use client';
 
 import { openWhatsApp } from "@/lib/whatsapp";
+import { useScrollAnimation } from "../hooks/useScrollAnimation";
 
 const steps = [
   {
@@ -28,19 +29,25 @@ export default function ContatoSection() {
     window.dispatchEvent(new Event("open-floating-chat"));
   }
 
+  const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation({ threshold: 0.15 });
+  const { ref: leftRef,   isVisible: leftVisible   } = useScrollAnimation({ threshold: 0.1  });
+  const { ref: rightRef,  isVisible: rightVisible  } = useScrollAnimation({ threshold: 0.1  });
+
   return (
     <section id="contato" style={{ backgroundColor: "#1d2b48", padding: "5rem 1.5rem" }}>
       <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
 
         {/* ── Título ── */}
-        <h2 className="section-title">
-          Fale agora com nosso{" "}
-          <span style={{ color: "#36c2ac" }}>assistente com IA</span>
-        </h2>
-        <p className="section-subtitle">
-          Sem formulário. Sem espera. Nosso assistente responde na hora sobre
-          orçamentos, prazos e serviços — 24 horas por dia.
-        </p>
+        <div ref={headerRef} className={`anim-fade-up ${headerVisible ? 'visible' : ''}`}>
+          <h2 className="section-title">
+            Fale agora com nosso{" "}
+            <span style={{ color: "#36c2ac" }}>assistente com IA</span>
+          </h2>
+          <p className="section-subtitle">
+            Sem formulário. Sem espera. Nosso assistente responde na hora sobre
+            orçamentos, prazos e serviços — 24 horas por dia.
+          </p>
+        </div>
 
         {/* ── Grid ── */}
         <div style={{
@@ -51,7 +58,7 @@ export default function ContatoSection() {
         }}>
 
           {/* ── ESQUERDA: passos ── */}
-          <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+          <div ref={leftRef} className={`anim-fade-left ${leftVisible ? 'visible' : ''}`} style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
             <div>
               <h3 style={{ fontSize: "1.5rem", fontWeight: 700, color: "#fff", lineHeight: 1.35 }}>
                 Como funciona o{" "}
@@ -93,7 +100,7 @@ export default function ContatoSection() {
           </div>
 
           {/* ── DIREITA: card ── */}
-          <div style={{ position: "relative" }}>
+          <div ref={rightRef} className={`anim-fade-right ${rightVisible ? 'visible' : ''}`} style={{ position: "relative" }}>
             {/* glow */}
             <div style={{
               position: "absolute", inset: 0, display: "flex",
